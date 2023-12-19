@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+{% extends 'main/base.html' %}
+<html>
+{% block content %}
+<div class="container">
+    REQUEST NEW CLASS
+    SORT ALPHABETICALLY
+    <p class="bg-dark text-center" style="color:#EBDEF0">BALANCE</p>
+    <p class="bg-dark text-center" style="color:#F79EF9">{{ left_to_pay }}</p>
+    <ul class="list-group list-group-flush">
+        {% for name, details in courses.items %}
+        <div class="container text-center">
+            <div class="align-items-start">
+                <div class="col">
+                    <li class="mt-4 list-group-item bg-dark border border-secondary" style="color:#AED6F1">{{ name }}</li>
+                </div>
+                <div class="col">
+                    <ul class="list-group list-group-horizontal">
+                        {% for detail, value in details.items %}
+                        <div class="col">
+                            <li class="list-group-item bg-dark border border-secondary" style="color:#EBDEF0">{{ detail }}</li>
+                            <li class="list-group-item bg-dark border border-secondary" style="color:#EBDEF0">{{ value }}</li>
+                        </div>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
+</html>

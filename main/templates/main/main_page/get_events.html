@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+{% extends 'main/base.html' %}
+<html>
+{% block content %}
+<div class="container">
+    ACTIVITIES - EVENT TYPE
+    <div class="card bg-dark border-0">
+        {% for activity in activities %}
+        {% if activity.type == 'Event' %}
+        <div class="mt-4 card-header border border-secondary rounded-top">
+            {{ activity.name }}
+        </div>
+        <div class="card-body border border-secondary rounded-bottom">
+            <p class="card-text">{{ activity.description }}</p>
+            {% if user.is_authenticated and user.is_staff %}
+            <a href="#" class="btn btn-info">Update</a>
+            {% endif %}
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+{% extends 'main/base.html' %}
+<html>
+{% block content %}
+<div class="container">
+    SORT TEACHERS alphabetically!<br>
+    Singing | Piano | Guitar | etc.<br>
+    after selecting button only the coaches that meets criteria are shown
+    <div class="card bg-dark border-0">
+        {% for coach in coaches %}
+        <div class="mt-4 card-header border border-secondary rounded-top text-center">
+            <b>{{ coach.user.first_name }} {{ coach.user.last_name }}</b>
+        </div>
+        <div class="card-body border border-secondary rounded-bottom border-0">
+            <div class="row justify-content-start">
+                <div class="col-3">
+                    <img class="rounded" src="{{ coach.avatar.url }}" alt height=250>
+                </div>
+                <div class="col">
+                    <p>{{ coach.description }}</p>
+                    <p>classes</p>
+                </div>
+            </div>
+            {% if user.is_authenticated and user == coach %}
+            <a href="#" class="btn btn-info">Update</a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+</html>

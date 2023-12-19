@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+{% extends 'main/base.html' %}
+<html>
+{% block content %}
+<div class="container">
+    NOT EVENTS
+    <button type="button" class="d-flex btn btn-info" data-bs-toggle="modal" data-bs-target="#addModal">Add</button>
+    <div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Activity</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" action="activities/add/">
+                    {% csrf_token %}
+                    <div class="modal-body text-start">
+                        {{ form_add.as_p }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-info">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="card bg-dark border-0">
+        {% for activity in activities %}
+        {% if activity.type == 'Info' %}
+        <div class="mt-4 card-header border border-secondary rounded-top">
+            {{ activity.name }}
+        </div>
+        <div class="card-body border border-secondary rounded-bottom">
+            <p class="card-text">{{ activity.description }}</p>
+            {% if user.is_authenticated and user.is_staff %}
+            <button type="button" class="d-flex btn btn-info" data-bs-toggle="modal" data-bs-target="#updateModal">Update</button>
+            <div class="modal fade" id="updateModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Update Activity</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="modal-body text-start">
+                                <div class="mb-3">
+                                    {{ form_update.as_p }}
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-info">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+</html>

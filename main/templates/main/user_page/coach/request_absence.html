@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+{% extends 'main/base.html' %}
+<html>
+{% block content %}
+<div class="container">
+    <form class="row g-3">
+        {% for question, answers in absence_questions.items %}
+        <h6 class="pb-2 mb-0 text-center" style="color:#EBDEF0"><b>{{ question }}</b></h6>
+            {% for answer in answers %}
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                <label class="form-check-label" for="flexRadioDefault1">{{ answer }}</label>
+            </div>
+            {% endfor %}
+        {% endfor %}
+        date ranges box
+        <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">Explanation:</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+        </div>
+        <div class="col-12">
+            <button class="btn btn-info" type="submit">Submit</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+</html>
