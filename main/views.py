@@ -1,3 +1,4 @@
+from django.contrib.auth import models as auth_models
 from django.shortcuts import render
 from main import models, forms
 
@@ -104,8 +105,34 @@ def chat(request):
     return render(request, 'main/user_page/chat.html', context={'navbar': get_navbar(request.user)})
 
 
-def calendar(request):
-    return render(request, 'main/user_page/calendar.html', context={'navbar': get_navbar(request.user)})
+def get_calendar(request):
+    # option to reschedule (only classes) for coaches
+    classes = models.Class.objects.all()
+    activities = models.Activity.objects.all()
+    calendar_fields = []
+    for activity in activities:
+        if activity.type == 'Event':
+            calendar_fields.append(activity)
+    calendar_fields.append(classes)
+    return render(request, 'main/user_page/get_calendar.html',
+                  {'navbar': get_navbar(request.user), 'events': calendar_fields})
+
+
+from django.http import JsonResponse
+
+
+def get_calendar_events(request):
+    all_events = models.Events.objects.all()
+    out = []
+    for event in all_events:
+        out.append({
+            'title': event.name,
+            'id': event.id,
+            'start': event.start.strftime("%m/%d/%Y, %H:%M:%S"),
+            'end': event.end.strftime("%m/%d/%Y, %H:%M:%S"),
+        })
+
+    return JsonResponse(out, safe=False)
 
 
 def send_feedback(request):
@@ -115,8 +142,22 @@ def send_feedback(request):
                            'feedback_questions': questions_student})
 
 
-def change_settings(request):
-    return render(request, 'main/user_page/settings.html', context={'navbar': get_navbar(request.user)})
+def get_settings(request):
+    form_change_password = forms.PasswordChangeForm()
+    return render(request, 'main/user_page/get_settings.html',
+                  {'navbar': get_navbar(request.user), 'form_change_password': form_change_password})
+
+
+def change_password(request):
+    if request.method == 'POST':
+        form_change_password = forms.PasswordChangeForm(request.POST)
+        if form_change_password.is_valid():
+            password = auth_models.UserManager()  # find this
+            password.save()
+    else:
+        form_change_password = forms.PasswordChangeForm()
+    return render(request, 'main/user_page/get_settings.html',
+                  {'navbar': NAVBAR, 'form_change_password': form_change_password})
 
 
 def get_assignments(request):

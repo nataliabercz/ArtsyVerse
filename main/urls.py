@@ -28,5 +28,6 @@ urlpatterns = [
     path('user/chat/', views.chat, name='chat'),
     path('user/feedback/', views.send_feedback, name='send-feedback'),
     path('user/payments/', views.get_payments, name='get-payments'),
-    path('user/settings/', views.change_settings, name='change-settings')
+    path('user/settings/', views.get_settings, name='get-settings'),
+    path('user/settings/password/update', views.change_password, name='change-password')
 ]

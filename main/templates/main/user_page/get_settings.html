@@ -2,21 +2,25 @@
 {% extends 'main/base.html' %}
 <html>
 {% block content %}
-<div class="container text-center">
-    ctrl + R duplicates photos -> upload and delete
-    <button type="button" class="d-flex btn btn-info" data-bs-toggle="modal" data-bs-target="#updateModal">Upload</button>
-    <div class="modal fade" id="updateModal" tabindex="-1" aria-hidden="true">
+<div class="container">
+    <!--    <a class="btn btn-secondary mb-2" href="/password_change">Change Password</a>-->
+    <button type="button" class="d-flex btn btn-secondary mb-2" data-bs-toggle="modal" data-bs-target="#passwordModal">Change Password</button>
+    <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+        <label class="form-check-label" for="flexSwitchCheckChecked">Chat Notifications</label>
+    </div>
+    <div class="modal fade" id="passwordModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content bg-dark">
                 <div class="modal-header">
-                    <h5 class="modal-title">Upload Photo</h5>
+                    <h5 class="modal-title">Change Password</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="post" enctype="multipart/form-data" action="/gallery/update">
+                <form method="post" action="/password/update">
                     {% csrf_token %}
                     <div class="modal-body text-start">
                         <div class="mb-3">
-                            <input class="form-control" type="file" name="photo">
+                            {{ form_change_password.as_p }}
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -26,9 +30,6 @@
             </div>
         </div>
     </div>
-    {% for image in images %}
-    <img class="rounded mb-1" src="{{ image.image.url }}" alt height=200>
-    {% endfor %}
 </div>
 {% endblock %}
 </html>
