@@ -26,11 +26,32 @@
                     {% endfor %}
                 </div>
             </div>
-            {% if user.is_authenticated and user == coach %}
-            <a href="#" class="btn btn-info">Update</a>
-            MODAL
-            <button type="submit" class="btn btn-info">Update</button>
+            {% if user.groups.all.0|slugify == 'coaches' and coach.user.user.username|slugify == user|slugify %}
+            <div class="btn-group btn-group-toggle mt-3 float-end" data-toggle="buttons">
+                <button type="button" class="d-flex btn btn-info" data-bs-toggle="modal" data-bs-target="#updateCoachModal">Update</button>
+            </div>
             {% endif %}
+            <div class="modal fade" id="updateCoachModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content bg-dark">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Update Activity</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form method="post" action="/coaches/update">
+                            {% csrf_token %}
+                            <div class="modal-body text-start">
+                                <div class="mb-3">
+                                    {{ form_update_coach.as_p }}
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-info">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
         {% endfor %}
     </div>

@@ -4,19 +4,23 @@
 {% block content %}
 <div class="container">
     {% if user.is_authenticated and user.groups.all.0|slugify == 'coaches' %}
-    <button type="button" class="d-flex btn btn-info" data-bs-toggle="modal" data-bs-target="#addModal">Add</button>
+    <button type="button" class="d-flex btn btn-info" data-bs-toggle="modal" data-bs-target="#addActivityModal">Add</button>
     {% endif %}
-    <div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="addActivityModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content bg-dark">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add Activity</h5>
+                    <h5 class="modal-title">Add {{ activity_type }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="post" action="activities/add">
+                <form method="post" action="activity/add" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="modal-body text-start">
+                        {% if activity_type == 'Info' %}
                         {{ form_add_activity.as_p }}
+                        { else }
+                        {{ form_add_event.as_p }}
+                        {% endif %}
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-info">Submit</button>
@@ -42,21 +46,25 @@
             </div>
             {% if user.is_authenticated and user.groups.all.0|slugify == 'coaches' %}
             <div class="btn-group btn-group-toggle mt-3 float-end" data-toggle="buttons">
-                <button type="button" class="d-flex btn btn-info" data-bs-toggle="modal" data-bs-target="#updateModal">Update</button>
+                <button type="button" class="d-flex btn btn-info" data-bs-toggle="modal" data-bs-target="#updateActivityModal">Update</button>
                 <button type="button" class="d-flex btn btn-danger">Delete</button>
             </div>
-            <div class="modal fade" id="updateModal" tabindex="-1" aria-hidden="true">
+            <div class="modal fade" id="updateActivityModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content bg-dark">
                         <div class="modal-header">
                             <h5 class="modal-title">Update Activity</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <form method="post">
+                        <form method="post" action="activity/update" enctype="multipart/form-data">
                             {% csrf_token %}
                             <div class="modal-body text-start">
                                 <div class="mb-3">
-                                    {{ form_update.as_p }}
+                                    {% if activity_type == 'Info' %}
+                                    {{ form_update_activity.as_p }}
+                                    { else }
+                                    {{ form_update_event.as_p }}
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="modal-footer">

@@ -5,7 +5,7 @@
 <div class="container">
     {% for name, offer_list in grouped_offer.items %}
     <div class="border-bottom mt-4">
-        <h4 class="text-center">{{ name }} Classes</h4>
+        <h4 class="text-center">{{ name }}</h4>
         {% for type, offer in offer_list.items %}
         {% if type == 'Individual' %}
         {% for item in offer %}
@@ -13,7 +13,7 @@
             <div class="col col-lg-4">
                 <div class="card rounded-3 bg-dark border-secondary shadow-sm">
                     <div class="card-header py-3 border-secondary">
-                        <h5 class="my-0 fw-normal" style="color:#AED6F1">Individual Lesson</h5>
+                        <h5 class="my-0 fw-normal" style="color:#AED6F1">Single {{ type }} Lesson</h5>
                     </div>
                     <div class="card-body">
                         <h4 class="card-title pricing-card-title">${{ item.single_class_price }}<small class="text-body-secondary fw-light">/mo</small></h4>
@@ -27,7 +27,7 @@
             <div class="col col-lg-4">
                 <div class="card rounded-3 bg-dark border-secondary shadow-sm">
                     <div class="card-header py-3 border-secondary">
-                        <h5 class="my-0 fw-normal" style="color:#AED6F1">Individual Lessons</h5>
+                        <h5 class="my-0 fw-normal" style="color:#AED6F1">Monthly {{ type }} Lessons</h5>
                     </div>
                     <div class="card-body">
                         <h4 class="card-title pricing-card-title">${{ item.monthly_class_price }}<small class="text-body-secondary fw-light">/mo</small></h4>
@@ -46,7 +46,7 @@
             <div class="col col-lg-4">
                 <div class="card rounded-3 bg-dark border-secondary shadow-sm">
                     <div class="card-header py-3 border-secondary">
-                        <h5 class="my-0 fw-normal" style="color:#AED6F1">Group Lessons</h5>
+                        <h5 class="my-0 fw-normal" style="color:#AED6F1">Monthly {{ type }} Lessons</h5>
                     </div>
                     <div class="card-body">
                         <h4 class="card-title pricing-card-title">${{ item.monthly_class_price }}<small class="text-body-secondary fw-light">/mo</small></h4>
