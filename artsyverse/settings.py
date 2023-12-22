@@ -40,7 +40,6 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'main.context_processors.set_navbar',
                 'main.context_processors.login_form',
-                'main.context_processors.activity_form',
                 'main.context_processors.image_form',
             ],
         },

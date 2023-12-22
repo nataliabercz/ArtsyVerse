@@ -12,10 +12,26 @@ class LoginForm(auth_forms.AuthenticationForm):
     password = forms.CharField()
 
 
-class ActivityForm(forms.Form):
-    name = forms.CharField(label='Name', max_length=50)
-    # type = forms.ChoiceField(choices=('Info', 'info'), ('Event', 'event'))
-    # description = forms.Textarea()
+class ActivityAddForm(forms.ModelForm):
+    class Meta:
+        model = models.Activity
+        exclude = ['start_time', 'end_time', 'location']
+        fields = '__all__'
+        # widgets = {
+        #     'type': forms.TextInput(attrs={'readonly': True, 'value': 'info'})
+        # }
+
+
+class ActivityUpdateForm(forms.ModelForm):
+    class Meta:
+        model = models.Activity
+        fields = ['name', 'photo', 'description']
+
+
+class CoachUpdateForm(forms.ModelForm):
+    class Meta:
+        model = models.CoachProfile
+        fields = ['description']
 
 
 class ImageForm(forms.ModelForm):

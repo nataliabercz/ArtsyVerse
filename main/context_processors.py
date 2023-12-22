@@ -25,9 +25,5 @@ def login_form(request):
     return {'login_form': forms.LoginForm()}
 
 
-def activity_form(request):
-    return {'activity_form': forms.ActivityForm()}
-
-
 def image_form(request):
     return {'image_form': forms.ImageForm()}

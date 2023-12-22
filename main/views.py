@@ -20,6 +20,7 @@ def login_user(request):
     # logout should redirect to the same page (if not in Account tab - then HOME)
     if request.method == 'POST':
         user = auth.authenticate(request, username=request.POST['username'], password=request.POST['password'])
+        print(user)
         # is the if user needed?
         if user:
             auth.login(request, user)
@@ -27,30 +28,36 @@ def login_user(request):
 
 
 def get_activities(request):
+    form_add_activity = forms.ActivityAddForm()
+    form_update_activity = forms.ActivityUpdateForm()
     return render(request, 'main/main_page/get_activities.html',
-                  {'activities': models.Activity.objects.all(), 'activity_type': 'Info'})
+                  {'activities': models.Activity.objects.all().order_by('-id'), 'activity_type': 'Info',
+                   'form_add_activity': form_add_activity, 'form_update_activity': form_update_activity})
 
 
 def add_activity(request):
     if request.method == 'POST':
-        form_add_activity = forms.ActivityForm(request.POST)
+        form_add_activity = forms.ActivityAddForm(request.POST, request.FILES)
         if form_add_activity.is_valid():
-            activity = models.Activity(name=request.POST.get('name'))
-            activity.save()
+            form_add_activity.save()
+        return redirect('/')
     else:
-        form_add_activity = forms.ActivityForm()
-    # redirect to /activities
+        form_add_activity = forms.ActivityAddForm()
     return render(request, 'main/main_page/get_activities.html',
-                  {'activities': models.Activity.objects.all(), 'form_add_activity': form_add_activity})
+                  {'activities': models.Activity.objects.all().order_by('-id'), 'form_add_activity': form_add_activity})
 
 
 def update_activity(request):
-    form_update_activity = forms.ActivityForm(request.POST or None)
-    if form_update_activity.is_valid():
-        pass
-    # REDIRECT
+    if request.method == 'POST':
+        form_update_activity = forms.ActivityUpdateForm(request.POST, request.FILES)
+        if form_update_activity.is_valid():
+            form_update_activity.save()
+        return redirect('')
+    else:
+        form_update_activity = forms.ActivityUpdateForm()
     return render(request, 'main/main_page/get_activities.html',
-                  {'activities': models.Activity.objects.all(), 'form_update_activity': form_update_activity})
+                  {'activities': models.Activity.objects.all().order_by('-id'),
+                   'form_update_activity': form_update_activity})
 
 
 def get_coaches(request):
@@ -62,7 +69,44 @@ def get_coaches(request):
                 classes[coach.user.user.username] = classes.get(coach.user.user.username, []) + \
                                                     [f'{_class.offer.category} lessons']
         classes[coach.user.user.username] = set(classes[coach.user.user.username])
-    return render(request, 'main/main_page/get_coaches.html', {'coaches': coaches, 'classes': classes})
+    for profile in models.CoachProfile.objects.all():
+        if profile.user.user.username == str(request.user):
+            coach_instance = models.CoachProfile.objects.get(id=profile.id)
+    try:
+        form_update_coach = forms.CoachUpdateForm(instance=coach_instance)
+    except UnboundLocalError:
+        form_update_coach = forms.CoachUpdateForm()
+    return render(request, 'main/main_page/get_coaches.html',
+                  {'coaches': coaches, 'classes': classes, 'form_update_coach': form_update_coach})
+
+
+def update_coach(request):
+    for profile in models.CoachProfile.objects.all():
+        if profile.user.user.username == str(request.user):
+            coach_instance = models.CoachProfile.objects.get(id=profile.id)
+    if request.method == 'POST':
+        form_update_coach = forms.CoachUpdateForm(request.POST, instance=coach_instance)
+        if form_update_coach.is_valid():
+            form_update_coach.save()
+        return redirect('/coaches')
+    else:
+        for profile in models.CoachProfile.objects.all():
+            if profile.user.user.username == str(request.user):
+                coach_instance = models.CoachProfile.objects.get(id=profile.id)
+        try:
+            form_update_coach = forms.CoachUpdateForm(instance=coach_instance)
+        except UnboundLocalError:
+            form_update_coach = forms.CoachUpdateForm()
+    classes = {}
+    coaches = models.CoachProfile.objects.all()
+    for coach in coaches:
+        for _class in models.Class.objects.all():
+            if str(coach) in [str(user) for user in _class.users.all()]:
+                classes[coach.user.user.username] = classes.get(coach.user.user.username, []) + \
+                                                    [f'{_class.offer.category} lessons']
+        classes[coach.user.user.username] = set(classes[coach.user.user.username])
+    return render(request, 'main/main_page/get_coaches.html',
+                  {'coaches': coaches, 'classes': classes, 'form_update_coach': form_update_coach})
 
 
 def get_contact(request):
@@ -87,22 +131,20 @@ def get_gallery(request):
     # three photos in a row - create table somehow
     form = forms.ImageForm()
     return render(request, 'main/main_page/get_gallery.html',
-                  {'images': models.Image.objects.all(), 'form_add_photo': form})
+                  {'images': models.Image.objects.all().order_by('-id'), 'form_add_photo': form})
 
 
 def update_gallery(request):
-    # ctrl + R duplicates photos
     # add option to delete images
-    # photo is downloaded after upload
     if request.method == 'POST':
-        form = forms.ImageForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('/gallery')
+        form_add_photo = forms.ImageForm(request.POST, request.FILES)
+        if form_add_photo.is_valid():
+            form_add_photo.save()
+        return redirect('/gallery')
     else:
-        form = forms.ImageForm()
+        form_add_photo = forms.ImageForm()
     return render(request, 'main/main_page/get_gallery.html',
-                  {'images': models.Image.objects.all(), 'form_add_photo': form})
+                  {'images': models.Image.objects.all().order_by('-id'), 'form_add_photo': form_add_photo})
 
 
 def get_info(request):
