@@ -3,8 +3,9 @@
 <html>
 {% block content %}
 <div class="container">
-    NOT EVENTS
+    {% if user.is_authenticated and user.groups.all.0|slugify == 'coaches' %}
     <button type="button" class="d-flex btn btn-info" data-bs-toggle="modal" data-bs-target="#addModal">Add</button>
+    {% endif %}
     <div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content bg-dark">
@@ -12,10 +13,10 @@
                     <h5 class="modal-title">Add Activity</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="post" action="activities/add/">
+                <form method="post" action="activities/add">
                     {% csrf_token %}
                     <div class="modal-body text-start">
-                        {{ form_add.as_p }}
+                        {{ form_add_activity.as_p }}
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-info">Submit</button>
@@ -26,14 +27,24 @@
     </div>
     <div class="card bg-dark border-0">
         {% for activity in activities %}
-        {% if activity.type == 'Info' %}
-        <div class="mt-4 card-header border border-secondary rounded-top">
+        {% if activity.type == activity_type %}
+        <div class="text-center mt-4 card-header border border-secondary rounded-top">
             {{ activity.name }}
         </div>
         <div class="card-body border border-secondary rounded-bottom">
-            <p class="card-text">{{ activity.description }}</p>
-            {% if user.is_authenticated and user.is_staff %}
-            <button type="button" class="d-flex btn btn-info" data-bs-toggle="modal" data-bs-target="#updateModal">Update</button>
+            <div class="row justify-content-start">
+                <div class="col-4">
+                    <img class="rounded" src="{{ activity.photo.url }}" alt height=200>
+                </div>
+                <div class="col">
+                    <p>{{ activity.description }}</p>
+                </div>
+            </div>
+            {% if user.is_authenticated and user.groups.all.0|slugify == 'coaches' %}
+            <div class="btn-group btn-group-toggle mt-3 float-end" data-toggle="buttons">
+                <button type="button" class="d-flex btn btn-info" data-bs-toggle="modal" data-bs-target="#updateModal">Update</button>
+                <button type="button" class="d-flex btn btn-danger">Delete</button>
+            </div>
             <div class="modal fade" id="updateModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content bg-dark">

@@ -3,8 +3,9 @@
 <html>
 {% block content %}
 <div class="container text-center">
-    ctrl + R duplicates photos -> upload and delete
-    <button type="button" class="d-flex btn btn-info" data-bs-toggle="modal" data-bs-target="#updateModal">Upload</button>
+    {% if user.is_authenticated and user.groups.all.0|slugify == 'coaches' %}
+    <button type="button" class="d-flex btn btn-info mb-4" data-bs-toggle="modal" data-bs-target="#updateModal">Upload</button>
+    {% endif %}
     <div class="modal fade" id="updateModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content bg-dark">
@@ -12,11 +13,11 @@
                     <h5 class="modal-title">Upload Photo</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="post" enctype="multipart/form-data" action="/gallery/update">
+                <form method="post" action="/gallery/update" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="modal-body text-start">
                         <div class="mb-3">
-                            <input class="form-control" type="file" name="photo">
+                            {{ form_add_photo.as_p }}
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -26,9 +27,11 @@
             </div>
         </div>
     </div>
-    {% for image in images %}
-    <img class="rounded mb-1" src="{{ image.image.url }}" alt height=200>
-    {% endfor %}
+    <div class="row row-cols-md-2">
+        {% for image in images %}
+        <img class="rounded-3 mb-2" src="{{ image.image.url }}" alt>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}
 </html>

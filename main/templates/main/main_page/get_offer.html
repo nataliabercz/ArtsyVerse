@@ -4,18 +4,60 @@
 {% block content %}
 <div class="container">
     {% for name, offer_list in grouped_offer.items %}
-    <p class="text-center">{{ name }}</p>
-    <div class="row row-cols-md-3 mb-3 text-center">
+    <div class="border-bottom mt-4">
+        <h4 class="text-center">{{ name }} Classes</h4>
         {% for type, offer in offer_list.items %}
-        {% if type == 'individual' %}
-        <div class="col">
-            {% for item in offer %}
-            <p>${{ item.single_class_price }} -> ${{ item.monthly_class_price }}<br></p>
-            {% endfor %}
+        {% if type == 'Individual' %}
+        {% for item in offer %}
+        <div class="row justify-content-md-center text-center mt-4 mb-4">
+            <div class="col col-lg-4">
+                <div class="card rounded-3 bg-dark border-secondary shadow-sm">
+                    <div class="card-header py-3 border-secondary">
+                        <h5 class="my-0 fw-normal" style="color:#AED6F1">Individual Lesson</h5>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title pricing-card-title">${{ item.single_class_price }}<small class="text-body-secondary fw-light">/mo</small></h4>
+                        <ul class="list-unstyled mt-3 mb-4">
+                            {{ item.description }}
+                        </ul>
+                        <button type="button" class="w-100 btn btn-lg btn-outline-info">Sign Up</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col col-lg-4">
+                <div class="card rounded-3 bg-dark border-secondary shadow-sm">
+                    <div class="card-header py-3 border-secondary">
+                        <h5 class="my-0 fw-normal" style="color:#AED6F1">Individual Lessons</h5>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title pricing-card-title">${{ item.monthly_class_price }}<small class="text-body-secondary fw-light">/mo</small></h4>
+                        <ul class="list-unstyled mt-3 mb-4">
+                            {{ item.description }}
+                        </ul>
+                        <button type="button" class="w-100 btn btn-lg btn-info">Sign Up</button>
+                    </div>
+                </div>
+            </div>
         </div>
+        {% endfor %}
         {% else %}
-        <div class="col">
-            <p>${{ item.monthly_class_price }}<br></p>
+        <div class="row justify-content-md-center text-center mt-4 mb-4">
+            {% for item in offer %}
+            <div class="col col-lg-4">
+                <div class="card rounded-3 bg-dark border-secondary shadow-sm">
+                    <div class="card-header py-3 border-secondary">
+                        <h5 class="my-0 fw-normal" style="color:#AED6F1">Group Lessons</h5>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title pricing-card-title">${{ item.monthly_class_price }}<small class="text-body-secondary fw-light">/mo</small></h4>
+                        <ul class="list-unstyled mt-3 mb-4">
+                            {{ item.description }}
+                        </ul>
+                        <button type="button" class="w-100 btn btn-lg btn-info">Sign Up</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
         </div>
         {% endif %}
         {% endfor %}
