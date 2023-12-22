@@ -1,4 +1,15 @@
+from django.contrib.auth import forms as auth_forms
 from django import forms
+from main import models
+
+
+class LoginForm(auth_forms.AuthenticationForm):
+    # password should be *********
+    def __init__(self, *args, **kwargs):
+        super(LoginForm, self).__init__(*args, **kwargs)
+
+    username = forms.EmailField()
+    password = forms.CharField()
 
 
 class ActivityForm(forms.Form):
@@ -7,11 +18,19 @@ class ActivityForm(forms.Form):
     # description = forms.Textarea()
 
 
-class ImageUpload(forms.Form):
-    image = forms.ImageField()
+class ImageForm(forms.ModelForm):
+    class Meta:
+        model = models.Image
+        fields = '__all__'
 
 
-class MyPasswordChangeForm(forms.Form):
+class FeedbackForm(forms.ModelForm):
+    class Meta:
+        models = models.Feedback
+        fields = '__all__'
+
+
+class PasswordChangeForm(forms.Form):
     first_name = forms.CharField(label='First name',
                                  max_length=30,
                                  widget=forms.TextInput(attrs={'class' : 'form-control'}),
