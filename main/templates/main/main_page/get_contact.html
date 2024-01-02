@@ -3,32 +3,40 @@
 <html>
 {% block content %}
 <div class="container">
-    <div class="card bg-dark border-0">
-        <div class="card-header border border-secondary rounded-top">
-            Contact Info
+    <div class="card bg-dark border-0 mt-2">
+        <div class="card-header border border-secondary text-center">
+            Address Info
         </div>
-        <div class="card-body border border-secondary">
-            <p class="card-text">Street Address: 3443 Lee Avenue</p>
-            <p class="card-text">City: Laurel Springs</p>
-            <p class="card-text">State: New Jersey</p>
-            <p class="card-text">Zipcode: 08021</p>
+        <div class="card-body">
+            {% for item, value in address.items %}
+            <div class="row justify-content-start">
+                <div class="col-2">
+                    <p>{{ item }}</p>
+                </div>
+                <div class="col">
+                    <p>{{ value }}</p>
+                </div>
+            </div>
+            {% endfor %}
         </div>
-        <div class="mt-4 card-header border border-secondary rounded-top">
+        <div class="card-header border border-secondary rounded text-center mt-4">
             Main Contact
         </div>
-        <div class="card-body border border-secondary">
-            <p class="card-text">{{ contacts.main_contact.user.first_name }} {{ contacts.main_contact.user.last_name }}</p>
-            <p class="card-text">{{ contacts.main_contact.user.email }}</p>
-            <p class="card-text">{{ contacts.main_contact.phone_number }}</p>
+        <div class="card-body">
+            <p class="card-text">{{ contacts.main_contact.user.user.first_name }} {{ contacts.main_contact.user.last_name }}</p>
+            <p class="card-text">{{ contacts.main_contact.user.user.email }}</p>
+            <p class="card-text">{{ contacts.main_contact.user.phone_number }}</p>
         </div>
-        <div class="mt-4 card-header border border-secondary rounded-top">
+        {% if contacts.additional_contacts %}
+        <div class="card-header border border-secondary rounded text-center mt-4">
             Additional Contacts
         </div>
+        {% endif %}
         {% for contact in contacts.additional_contacts %}
-        <div class="card-body border border-secondary">
-            <p class="card-text">{{ contact.user.first_name }} {{ contact.user.last_name }}</p>
-            <p class="card-text">{{ contact.user.email }}</p>
-            <p class="card-text">{{ contact.phone_number }}</p>
+        <div class="card-body">
+            <p class="card-text">{{ contact.user.user.first_name }} {{ contact.user.last_name }}</p>
+            <p class="card-text">{{ contact.user.user.email }}</p>
+            <p class="card-text">{{ contact.user.phone_number }}</p>
         </div>
         {% endfor %}
     </div>

@@ -3,27 +3,55 @@
 <html>
 {% block content %}
 <div class="container">
-    SORT TEACHERS alphabetically!<br>
-    Singing | Piano | Guitar | etc.<br>
-    after selecting button only the coaches that meets criteria are shown
     <div class="card bg-dark border-0">
         {% for coach in coaches %}
-        <div class="mt-4 card-header border border-secondary rounded-top text-center">
-            <b>{{ coach.user.first_name }} {{ coach.user.last_name }}</b>
+        <div class="card-header border border-secondary rounded-top text-center">
+            <b>{{ coach.user.user.first_name }} {{ coach.user.user.last_name }}</b>
         </div>
-        <div class="card-body border border-secondary rounded-bottom border-0">
+        <div class="card-body border border-secondary rounded-bottom border-0 mb-4">
             <div class="row justify-content-start">
                 <div class="col-3">
-                    <img class="rounded" src="{{ coach.avatar.url }}" alt height=250>
+                    <img class="rounded" src="{{ coach.photo.url }}" alt height=250>
                 </div>
                 <div class="col">
                     <p>{{ coach.description }}</p>
-                    <p>classes</p>
+                    {% for item, values in classes.items %}
+                    {% if item == coach.user.user.username %}
+                    <ul>
+                        {% for class in values %}
+                        <li>{{ class }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    {% endfor %}
                 </div>
             </div>
-            {% if user.is_authenticated and user == coach %}
-            <a href="#" class="btn btn-info">Update</a>
+            {% if user.groups.all.0|slugify == 'coaches' and coach.user.user.username|slugify == user|slugify %}
+            <div class="btn-group btn-group-toggle mt-3 float-end" data-toggle="buttons">
+                <button type="button" class="d-flex btn btn-info" data-bs-toggle="modal" data-bs-target="#updateCoachModal">Update</button>
+            </div>
             {% endif %}
+            <div class="modal fade" id="updateCoachModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content bg-dark">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Update Activity</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form method="post" action="/coaches/update">
+                            {% csrf_token %}
+                            <div class="modal-body text-start">
+                                <div class="mb-3">
+                                    {{ form_update_coach.as_p }}
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-info">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
         {% endfor %}
     </div>
