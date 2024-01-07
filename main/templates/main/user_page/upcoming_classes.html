@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+{% extends 'main/base.html' %}
+<html>
+{% block content %}
+<div class="container">
+    <h4 class="text-center mt-4 mb-2">UPCOMING CLASSES</h4>
+    <div class="card bg-dark border-0">
+        {% for class in classes %}
+        <div class="card-header border-bottom border-secondary bg-dark text-center mt-4">
+            <b>{{ class.name }} ({{ class.type }})</b>
+        </div>
+        <div class="card-body">
+            <div class="row justify-content-start">
+                <div class="col-3 text-center">
+                    <img class="rounded" src="{{ class.image.url }}" alt height=185>
+                </div>
+                <div class="col">
+                    <p>{{ class.day_name }}</p>
+                    <p>{{ class.start_time|date:'h:i A' }} - {{ class.end_time|date:'h:i A' }}</p>
+                    <p>{{ class.location }}</p>
+                    {% if user.groups.all.0|slugify == 'coaches' %}
+                    {% if class.type == 'Individual' %}
+                    <a href="/user/assignments/{{ class.class_id }}/{{ class.user_id }}" class="btn btn-secondary px-4" role="button">{{ class.user }}</a>
+                    {% else %}
+                    <a href="/user/assignments/{{ class.class_id }}" class="btn btn-secondary px-4" role="button">{{ class.user }}</a>
+                    {% endif %}
+                    {% else %}
+                    <p>{{ class.user }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+</html>

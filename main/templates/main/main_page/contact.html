@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+{% extends 'main/base.html' %}
+<html>
+{% block content %}
+<div class="container">
+    {% if user.is_superuser %}
+    <button type="button" class="d-flex btn btn-info px-4 mb-4" data-bs-toggle="modal" data-bs-target="#updateContact">Update</button>
+    {% endif %}
+    <div class="modal fade" id="updateContact" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content bg-dark">
+                <div class="modal-header">
+                    <h5 class="modal-title">Update Contact Data</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" action="/contact/update">
+                    {% csrf_token %}
+                    <div class="modal-body text-start">
+                        {{ contact_data.form_contact_update.as_p }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-info">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="card bg-dark border-0 mt-2">
+        <div class="card-header border-bottom border-secondary bg-dark text-center mt-4">
+            <b>Address Info</b>
+        </div>
+        <div class="card-body">
+            {% for item, value in contact_data.address.items %}
+            <div class="row justify-content-start">
+                <div class="col-2">
+                    <p>{{ item }}</p>
+                </div>
+                <div class="col">
+                    <p>{{ value }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="card-header border-bottom border-secondary bg-dark text-center mt-4">
+            <b>Main Contact</b>
+        </div>
+        <div class="card-body">
+            <p class="card-text"><b>{{ contact_data.main_contact.user.user.first_name }} {{ contact_data.main_contact.user.user.last_name }}</b></p>
+            <p class="card-text">
+                <img class="rounded" src="/media/email.png" alt width="40">&nbsp;&nbsp;
+                {{ contact_data.main_contact.user.user.email }}
+            </p>
+            <p class="card-text">
+                <img class="rounded" src="/media/phone.png" alt width="40">&nbsp;&nbsp;
+                {{ contact_data.main_contact.user.phone_number }}
+            </p>
+        </div>
+        {% if contact_data.additional_contacts %}
+        <div class="card-header border-bottom border-secondary bg-dark text-center mt-4">
+            <b>Additional Contacts</b>
+        </div>
+        {% endif %}
+        {% for contact in contact_data.additional_contacts %}
+        <div class="card-body">
+            <p class="card-text"><b>{{ contact.user.user.first_name }} {{ contact.user.user.last_name }}</b></p>
+            <p class="card-text">
+                <img class="rounded" src="/media/email.png" alt width="40">&nbsp;&nbsp;
+                {{ contact.user.user.email }}
+            </p>
+            <p class="card-text">
+                <img class="rounded" src="/media/phone.png" alt width="40">&nbsp;&nbsp;
+                {{ contact.user.phone_number }}
+            </p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+</html>

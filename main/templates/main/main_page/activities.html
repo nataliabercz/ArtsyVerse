@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+{% extends 'main/base.html' %}
+{% load define_action %}
+<html>
+{% block content %}
+<div class="container">
+    {% if request.get_full_path == '/' %}
+    {% define "Activity" as activity_type %}
+    {% define "200" as image_height %}
+    {% else %}
+    {% define "Event" as activity_type %}
+    {% define "350" as image_height %}
+    {% endif %}
+    {% if user.is_authenticated and user.groups.all.0|slugify == 'coaches' %}
+    <button type="button" class="d-flex btn btn-info px-4" data-bs-toggle="modal" data-bs-target="#add{{ activity_type }}">Add</button>
+    {% endif %}
+    <div class="modal fade" id="add{{ activity_type }}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content bg-dark">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add {{ activity_type }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" action="/{{ activity_type|lower }}/add" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-body text-start">
+                        {{ form_activity_add.as_p }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-info">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="card bg-dark border-0">
+        {% for type, activity in activities.items %}
+        {% if type == activity_type %}
+        {% for item in activity %}
+        <div class="card-header border-bottom border-secondary bg-dark text-center mt-4">
+            <b>{{ item.name }}</b>
+        </div>
+        <div class="card-body">
+            <div class="row justify-content-start">
+                <div class="col-4 text-center ">
+                    <img class="rounded" src="{{ item.image.url }}" alt height="{{ image_height }}">
+                </div>
+                <div class="col">
+                    <p>{{ item.description }}</p>
+                </div>
+            </div>
+            {% if user.is_authenticated and user.groups.all.0|slugify == 'coaches' %}
+            <button type="button" class="btn btn-danger float-end px-4 ms-1" data-bs-toggle="modal" data-bs-target="#delete{{ item.id }}">Delete</button>
+            <button type="button" class="btn btn-info float-end px-4" data-bs-toggle="modal" data-bs-target="#update{{ item.id }}">Update</button>
+            <div class="modal fade" id="update{{ item.id }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content bg-dark">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Update {{ type }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form method="post" action="/{{ type|lower }}/update/{{ item.id }}" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="modal-body text-start">
+                                <div class="mb-3">
+                                    {{ item.form_activity_update.as_p }}
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-info">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="delete{{ item.id }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content bg-dark">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Delete {{ type }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form method="post" action="/{{ type|lower }}/delete/{{ item.id }}">
+                            {% csrf_token %}
+                            <div class="modal-body text-center">
+                                Do you really want to delete<br><b>{{ item.name }}</b><br>?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-info">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+</html>
