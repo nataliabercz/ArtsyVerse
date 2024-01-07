@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+{% extends 'main/base.html' %}
+<html>
+{% block content %}
+<div class="container">
+    <h5 class="bg-dark text-center mt-4 mb-4" style="color:#EBDEF0">BALANCE</h5>
+    {% if positive %}
+    <h4 class="bg-dark text-center mb-4" style="color:#97FF33">${{ balance }}</h4>
+    {% else %}
+    <h4 class="bg-dark text-center mb-4" style="color:#F79EF9">-${{ balance }}</h4>
+    {% endif %}
+    <div class="row justify-content-md-center text-center">
+        {% for name, price in classes.items %}
+        <div class="col col-lg-3 mt-4">
+            <div class="card rounded-3 bg-dark border-secondary shadow-sm">
+                <div class="card-header py-3 border-secondary">
+                    <p class="my-0 fw-normal" style="color:#AED6F1">{{ name }}</p>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title pricing-card-title">${{ price }}<small class="text-body-secondary fw-light">/mo</small></h5>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div><br>
+    <div class="card-header border-bottom border-secondary bg-dark text-center mt-4">
+        <b>Payment Data</b>
+        <br>account number, etc.
+    </div>
+    <div class="card-body">
+        <p class="card-text"><b>{{ contact_data.main_contact.user.user.first_name }} {{ contact_data.main_contact.user.user.last_name }}</b></p>
+        <p class="card-text">
+            <img class="rounded" src="/media/email.png" alt width="40">&nbsp;&nbsp;
+            {{ contact_data.main_contact.user.user.email }}
+        </p>
+        <p class="card-text">
+            <img class="rounded" src="/media/phone.png" alt width="40">&nbsp;&nbsp;
+            {{ contact_data.main_contact.user.phone_number }}
+        </p>
+    </div>
+</div>
+{% endblock %}
+</html>
