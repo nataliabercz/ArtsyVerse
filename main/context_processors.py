@@ -2,9 +2,9 @@ from main import forms
 
 NAVBAR = {'About': '/about', 'Coaches': '/coaches', 'Events': '/events', 'Gallery': '/gallery', 'Offer': '/offer',
           'Contact': '/contact'}
-STUDENT_NAVBAR = {'Assignments': '/user/assignments', 'Chat': '/user/chat', 'Calendar': '/user/calendar',
+STUDENT_NAVBAR = {'Assignments': '/user/assignments', 'Messages': '/user/messages', 'Calendar': '/user/calendar',
                   'Payments': '/user/payments', 'Settings': '/user/settings'}
-COACH_NAVBAR = {'Chat': '/user/chat', 'Calendar': '/user/calendar', 'Request Absence': '/user/absences',
+COACH_NAVBAR = {'Messages': '/user/messages', 'Calendar': '/user/calendar', 'Absences': '/user/absences',
                 'Settings': '/user/settings'}
 COACH_DOMAIN = 'coach.artsyverse.com'
 

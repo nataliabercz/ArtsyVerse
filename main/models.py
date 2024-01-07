@@ -12,8 +12,8 @@ class BaseModel(models.Model):
 
 class Activity(BaseModel):
     name = models.CharField(max_length=50)
-    type = models.CharField(max_length=5, choices=(('Info', 'info'), ('Event', 'event')))
-    photo = models.ImageField(upload_to='gallery', blank=True, null=True)
+    type = models.CharField(max_length=8, choices=(('Activity', 'activity'), ('Event', 'event')))
+    image = models.ImageField(upload_to='gallery')
     description = models.TextField()
     date = models.DateField()
     start_time = models.TimeField(blank=True, null=True)
@@ -28,21 +28,32 @@ class Activity(BaseModel):
 
 
 class Offer(BaseModel):
-    category = models.CharField(max_length=20, choices=(('Singing', 'singing'), ('Piano', 'piano'),
-                                                        ('Guitar', 'guitar'), ('Bass', 'bass'), ('Drums', 'drums'),
-                                                        ('Music Production', 'music production'), ('Band', 'band'),
-                                                        ('Theater', 'theater'), ('Dancing', 'dancing')))
+    category = models.CharField(max_length=20)
     type = models.CharField(max_length=10, choices=(('Individual', 'individual'), ('Group', 'group')))
     single_class_price = models.FloatField(blank=True, null=True)
-    monthly_class_price = models.FloatField(blank=True, null=True)
+    monthly_class_price = models.FloatField()
     description = models.TextField()
-    photo = models.ImageField(upload_to='classes', blank=True, null=True)
+    image = models.ImageField(upload_to='classes')
 
     def __str__(self):
         return f'{self.category} {self.type}'
 
     class Meta:
         verbose_name_plural = 'Offer'
+
+
+class Assignment(BaseModel):
+    name = models.CharField(max_length=50)
+    skill_degree = models.CharField(max_length=16, choices=(('Requested', 'requested'), ('Started', 'started'),
+                                                            ('In Progress', 'in progress'),
+                                                            ('Ready To Perform', 'ready to perform'),
+                                                            ('Obsolete', 'obsolete')))
+    coach_notes = models.TextField(blank=True, null=True)
+    student_notes = models.TextField(blank=True, null=True)
+    offer = models.ForeignKey(Offer, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
 
 
 class Class(BaseModel):
@@ -54,8 +65,9 @@ class Class(BaseModel):
     day_name = models.CharField(max_length=9, choices=[(calendar.day_name[i], calendar.day_name[i]) for i in range(0, 5)])
     start_time = models.TimeField()
     end_time = models.TimeField()
-    users = models.ManyToManyField(auth_models.User, blank=True, null=True)
     location = models.CharField(max_length=20)
+    users = models.ManyToManyField(auth_models.User, blank=True, null=True)
+    assignments = models.ManyToManyField(Assignment, blank=True, null=True)
 
     def __str__(self):
         return f'{self.offer.category} - {self.offer.type} - {self.level} - ' \
@@ -82,7 +94,7 @@ class UserProfile(BaseModel):
 
 class CoachProfile(BaseModel):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    photo = models.ImageField(upload_to='coaches')
+    image = models.ImageField(upload_to='coaches')
     description = models.TextField()
 
     def __str__(self):
@@ -92,22 +104,25 @@ class CoachProfile(BaseModel):
         verbose_name_plural = 'Coach Profiles'
 
 
-class Assignment(BaseModel):
-    name = models.CharField(max_length=50)
-    skill_degree = models.CharField(max_length=16, choices=(('Requested', 'requested'), ('Started', 'started'),
-                                                            ('In Progress', 'in progress'),
-                                                            ('Ready To Perform', 'ready to perform')))
-    coach_notes = models.TextField(blank=True, null=True)
-    student_notes = models.TextField(blank=True, null=True)
-    class_id = models.ForeignKey(Class, on_delete=models.CASCADE)
+class Info(BaseModel):
+    school_name = models.CharField(max_length=30)
+    slogan = models.CharField(max_length=50, blank=True, null=True)
+    description = models.TextField()
+    street = models.CharField(max_length=50)
+    city = models.CharField(max_length=50)
+    state = models.CharField(max_length=50)
+    zipcode = models.CharField(max_length=10)
+    contact_people = models.ManyToManyField(CoachProfile)
 
     def __str__(self):
-        return self.name
+        return f'{self.school_name} {self.slogan}'
+
+    class Meta:
+        verbose_name_plural = 'Info'
 
 
 class StudentProfile(BaseModel):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    assignments = models.ManyToManyField(Assignment)
     balance = models.FloatField()
 
     def __str__(self):
@@ -136,19 +151,6 @@ class Payment(BaseModel):
 #
 #     def __str__(self):
 #         return self.reason
-
-
-# class Calendar(BaseModel):
-#     activity = models.ForeignKey(Activity, blank=True, on_delete=models.CASCADE)
-#     classes = models.ForeignKey(Class, blank=True, on_delete=models.CASCADE)
-#
-#     class Meta:
-#         verbose_name_plural = 'Calendar'
-
-
-# class Chat(BaseModel):
-#     class Meta:
-#         verbose_name_plural = 'Chat'
 #
 #
 # class Feedback(BaseModel):
@@ -181,3 +183,10 @@ class Payment(BaseModel):
 class Feedback(BaseModel):
     question1 = models.CharField(max_length=255)
     answer1 = models.TextField()
+
+
+class Message(BaseModel):
+    sender = models.ForeignKey(auth_models.User, on_delete=models.CASCADE)
+    recipient = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    datetime = models.DateTimeField()
+    text = models.TextField()
