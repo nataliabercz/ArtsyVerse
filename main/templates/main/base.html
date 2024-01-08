@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+{% load define_action %}
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -19,7 +20,12 @@
             {% block navbar %}
             <div class="btn-group">
                 {% for nav, ref in navbar.items %}
-                <a class="btn btn-dark" href="{{ ref }}">{{ nav }}</a>
+                {% if nav|slugify in request.get_full_path|slugify  %}
+                {% define "btn-secondary" as button_type %}
+                {% else %}
+                {% define "btn-dark" as button_type %}
+                {% endif %}
+                <a class="btn {{ button_type }}" href="{{ ref }}">{{ nav }}</a>
                 {% endfor %}
             </div>
             {% endblock %}

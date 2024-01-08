@@ -1,63 +1,102 @@
 <!DOCTYPE html>
 {% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
+{% load define_action %}
+{% load get_value %}
 <html>
 {% block content %}
 <div class="container">
+    add scroll to messages that will be scrolled to end by default
+    what if there were no messages yet ?
+    select person when you read messages from him (+ navbar?)
     <div class="card bg-dark border-0">
         <div class="row">
             <div class="col-12 col-lg-5 col-xl-3">
-                <div class="d-flex align-items-center">
-                    LUPA&nbsp;&nbsp;<input type="text" class="form-control my-3" placeholder="Search...">
+                <div class="row px-3 py-3 border-top">
+                    <div class="col-2 px-0">
+                        <img class="rounded" src="/media/magnifier.png" alt width="40">
+                    </div>
+                    <div class="col-10 p-0">
+                        <input type="text" class="form-control" placeholder="Search...">
+                    </div>
                 </div>
-                <!--                loop-->
-                <a href="#" class="list-group-item list-group-item-action border-0 bg-dark" style="color:#AED6F1">
-                    <div class="d-flex align-items-start border-bottom">
-                        <div class="flex-grow-1 ml-3">Vanessa Tucker</div>
-                        <span class="badge rounded-pill bg-danger bg-success float-right">99+
-                        <span class="visually-hidden">unread messages</span>
-                        </span>
+                {% for recipient, messages in grouped_messages.items %}
+                <a href="/user/messages/{{ messages.user.id }}" class="list-group-item list-group-item-action border-0 bg-dark" style="color:#AED6F1">
+                    WARNING - 3 is in 13
+                    {% if messages.user.id|slugify in request.get_full_path|slugify  %}
+                    {% define "border rounded border-white" as user_border %}
+                    {% else %}
+                    {% define "border-bottom" as user_border %}
+                    {% endif %}
+                    <div class="d-flex align-items-start py-2 px-2 {{ user_border }}">
+                        <div class="flex-grow-1 ml-3">{{ messages.user.first_name }} {{ messages.user.last_name }}</div>
+                        {% if messages.unread %}
+                        <span class="badge bg-info float-right">+{{ messages.unread }}</span>
+                        {% else %}
+                        <span class="badge bg-info float-right"></span>
+                        {% endif %}
                     </div>
                 </a>
-                <!--                end loop-->
+                {% endfor %}
             </div>
+            {% if grouped_messages %}
+            {% with user_messages=grouped_messages|get_value:last_recipient %}
             <div class="col-12 col-lg-7 col-xl-9">
                 <div class="py-4 px-4 border-bottom d-none d-lg-block">
                     <div class="d-flex align-items-center py-1">
                         <div class="flex-grow-1 pl-3">
-                            <b>{{ messages.0.sender.first_name }} {{ messages.0.sender.last_name }}</b>
+                            <b>{{ user_messages.user.first_name }} {{ user_messages.user.last_name }}</b>
                         </div>
                     </div>
                 </div>
                 <div class="position-relative">
                     <div class="chat-messages p-4">
-                        {% for message in messages %}
-                        <div class="chat-message-right pb-4">
-                            <div>
-                                <div class="text-muted small text-nowrap mt-2">{{ message.datetime|date:'m/d/y h:i A' }}</div>
-                            </div>
-                            <div class="card bg-dark border-secondary mt-1">
-                                <div class="card-header bg-dark border-0">
-                                    {% if user == message.sender %}
-                                    <b><small>You</small></b>
-                                    {% else %}
-                                    <b><small>{{ message.sender.first_name }} {{ message.sender.last_name }}</small></b>
-                                    {% endif %}
+                        {% for message in user_messages.messages %}
+                        <div class="chat-message pb-4">
+                            {% if user == message.sender %}
+                            {% define "float-end" as message_pos %}
+                            {% define "text-end" as text_pos %}
+                            {% define "You" as username %}
+                            {% else %}
+                            {% define "float-start" as message_pos %}
+                            {% define "text-start" as text_pos %}
+                            {% define message.sender.first_name as username %}
+                            {% endif %}
+                            <div class="row">
+                                <div>
+                                    <div class="text-muted small text-nowrap mt-2 {{ message_pos }}">{{ message.datetime|date:'m/d/y h:i A' }}</div>
                                 </div>
-                                <div class="card-body rounded">
-                                    {{ message.text }}
+                                <div class="col">
+                                    <div class="card bg-dark border-white mt-1 {{ message_pos }} {{ text_pos }}">
+                                        <div class="card-header bg-dark border-0">
+                                            <b><small>{{ username }}</small></b>
+                                        </div>
+                                        <div class="card-body rounded">
+                                            {{ message.text }}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         {% endfor %}
-                        <div class="flex-grow-0 py-3 px-4 border-top">
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Type your message">
-                                <button class="btn btn-info">Send</button>
+                        <form method="post" action="/user/message/send">
+                            {% csrf_token %}
+                            <div class="row px-3 py-3 border-top">
+                                <div class="col-11 p-0">
+                                    {{ form_message_send|crispy }}
+                                </div>
+                                <div class="col-1 px-0">
+                                    <button class="btn btn-info" type="submit">Send</button>
+                                </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
+            {% endwith %}
+            {% endif %}
         </div>
-        {% endblock %}
+    </div>
+</div>
+{% endblock %}
 </html>
