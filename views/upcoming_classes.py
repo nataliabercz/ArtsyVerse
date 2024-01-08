@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 import time
 import datetime
 from django.shortcuts import render
@@ -7,6 +8,7 @@ from main import models
 HTML_TEMPLATE = 'main/user_page/upcoming_classes.html'
 
 
+@login_required()
 def get_upcoming_classes(request):
     classes = []
     next_week = []

@@ -1,8 +1,10 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import models as auth_models
 from django.shortcuts import render
 from main import forms
 
 
+@login_required
 def get_settings(request):
     form_change_password = forms.PasswordChangeForm()
     return render(request, 'main/user_page/settings.html', {'form_change_password': form_change_password})

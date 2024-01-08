@@ -3,6 +3,9 @@ from django.urls import path, include
 from views import views, about, absences, activities, assignments, calendar, coaches, contact, gallery, messages, \
     offer, payments, settings, upcoming_classes
 
+handler404 = views.error_404
+handler500 = views.error_500
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('django.contrib.auth.urls')),
@@ -53,9 +56,11 @@ urlpatterns = [
 
     path('user/calendar/', calendar.get_calendar, name='calendar-get'),
     path('user/calendar/events', calendar.get_calendar_events, name='calendar-get-events'),
-    # path('user/calendar/(class)/reschedule', views.calendar_reschedule, name='calendar-reschedule'),  # only coaches
+    path('user/calendar/reschedule/<int:class_id>', calendar.reschedule_class, name='class-reschedule'),  # only coaches
 
     path('user/messages/', messages.get_messages, name='messages-get'),
+    path('user/messages/<int:recipient_id>', messages.get_messages, name='messages-get'),
+    path('user/message/send', messages.send_message, name='messages-send'),
 
     path('user/payments/', payments.get_payments, name='payments-get'),
     path('user/payments/pay', payments.pay_for_classes, name='payments-pay'),

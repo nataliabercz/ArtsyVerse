@@ -4,6 +4,8 @@ import pathlib
 BASE_DIR = pathlib.Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-bq904o-#h!w)y5m*d&y(v^t3hl1pf9&tm06m4*z6!()*&&46ry'
+# DEBUG = False
+# ALLOWED_HOSTS = ['127.0.0.1']
 DEBUG = True
 ALLOWED_HOSTS = []
 
@@ -14,6 +16,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_forms',
+    'crispy_bootstrap5',
     'main'
 ]
 
@@ -90,3 +94,6 @@ AUTH_PROFILE_MODULE = 'artsyverse.UserProfile'
 
 LOGIN_REDIRECT_URL = "/user"
 LOGOUT_REDIRECT_URL = "/"
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
+CRISPY_TEMPLATE_PACK = 'bootstrap5'

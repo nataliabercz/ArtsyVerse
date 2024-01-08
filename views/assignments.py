@@ -1,9 +1,11 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from main import models, forms
 
 HTML_TEMPLATE = 'main/user_page/assignments.html'
 
 
+@login_required
 def get_assignments(request, class_id=None, user_id=None):
     return render(request, HTML_TEMPLATE, {'grouped_assignments': get_grouped_assignments(request, class_id, user_id)})
 

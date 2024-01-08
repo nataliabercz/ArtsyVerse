@@ -189,4 +189,5 @@ class Message(BaseModel):
     sender = models.ForeignKey(auth_models.User, on_delete=models.CASCADE)
     recipient = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     datetime = models.DateTimeField()
+    is_read = models.BooleanField()
     text = models.TextField()

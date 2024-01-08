@@ -152,3 +152,14 @@ class OfferUpdateForm(forms.ModelForm):
         fields = '__all__'
         labels = ({'image': ''})
         widgets = ({'type': forms.HiddenInput(), 'description': TEXT_AREA_WIDGET})
+
+
+class MessageSendForm(forms.ModelForm):
+    class Meta:
+        model = models.Message
+        fields = '__all__'
+        labels = ({'text': ''})
+        widgets = ({'sender': forms.HiddenInput(), 'recipient': forms.HiddenInput(),
+                    'datetime': forms.HiddenInput(attrs={'value': datetime.datetime.now()}),
+                    'is_read': forms.HiddenInput(attrs={'value': False}),
+                    'text': forms.TextInput(attrs={'placeholder': 'Type your message', 'rows': 1})})

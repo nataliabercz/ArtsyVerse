@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 import time
 import datetime
 from django.shortcuts import render
@@ -10,6 +11,7 @@ SEASON_END = '2024-06-30'
 OWNER = 'rick.williams@coach.artsyverse.com'  # superuser - no superuser: admin
 
 
+@login_required
 def get_calendar(request):
     # default view - week
     # option to reschedule (only classes) for coaches
@@ -67,3 +69,7 @@ def get_weekdays(day_name):
             result.append(date_start)
         date_start += datetime.timedelta(days=1)
     return result
+
+
+def reschedule_class(request, class_id):
+    pass
