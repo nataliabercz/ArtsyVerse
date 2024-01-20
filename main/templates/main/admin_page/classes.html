@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+{% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
+<html>
+{% block content %}
+<style>
+.accordion-button:focus {
+  z-index: 1;
+  box-shadow: 0 0 0 .05rem #FFF !important;
+}
+.accordion-button:after {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
+}
+</style>
+<div class="container">
+    {% if user.is_superuser %}
+    <button type="button" class="d-flex btn btn-info px-4" data-bs-toggle="modal" data-bs-target="#addClass">Add</button>
+    <div class="modal fade" id="addClass" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Class</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" action="/user/admin/class/add">
+                    {% csrf_token %}
+                    <div class="modal-body text-start">
+                        {{ form_class_add|crispy }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-info">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="accordion mt-4">
+        {% for category, types in grouped_classes.items %}
+        <div class="accordion-item border-0">
+            <h2 class="accordion-header" id="heading{{ category|cut:' ' }}">
+                <button type="button" class="accordion-button collapsed border-bottom" style="color:white" data-bs-toggle="collapse" data-bs-target="#collapse{{ category|cut:' ' }}" aria-expanded="true" aria-controls="collapse{{ category|cut:' ' }}">
+                    <b>{{ category }}</b>
+                </button>
+            </h2>
+            <div id="collapse{{ category|cut:' ' }}" class="accordion-collapse collapse {% if forloop.first %}{% endif %}" aria-labelledby="heading{{ category|cut:' ' }}" data-bs-parent="">
+                <div class="accordion-body">
+                    {% for type, classes in types.items %}
+                    <div class="row text-center">
+                        <button type="button" class="btn" style="background-color:#CFF1F8;color:black" disabled><b>{{ type|upper }}</b></button>
+                    </div>
+                    <div class="row mt-2 mb-1 py-2" style="color:#6EE1F8">
+                        <div class="col px-4 my-auto">
+                            <b>Day Name</b>
+                        </div>
+                        <div class="col px-4 my-auto">
+                            <b>Start Time</b>
+                        </div>
+                        <div class="col px-4 my-auto">
+                            <b>Level</b>
+                        </div>
+                        <div class="col px-4 my-auto">
+                            <b>Age Group</b>
+                        </div>
+                        <div class="col-3 px-4 my-auto"></div>
+                    </div>
+                    {% for class in classes %}
+                    <div class="row border-top py-2">
+                        <div class="col px-4 my-auto">
+                            {{ class.day_name }}
+                        </div>
+                        <div class="col px-4 my-auto">
+                            {{ class.start_time }}
+                        </div>
+                        <div class="col px-4 my-auto">
+                            {{ class.level }}
+                        </div>
+                        <div class="col px-4 my-auto">
+                            {{ class.age_group }}
+                        </div>
+                        <div class="col-3 px-4 my-auto">
+                            <button type="button" class="btn btn-danger float-end px-4 ms-1" data-bs-toggle="modal" data-bs-target="#delete{{ class.id }}">Delete</button>
+                            <button type="button" class="btn btn-info float-end px-4" data-bs-toggle="modal" data-bs-target="#update{{ class.id }}">Update</button>
+                            <div class="modal fade" id="update{{ class.id }}" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Update {{ category }} ({{ type }})</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <form method="post" action="/user/admin/class/update/{{ class.id }}">
+                                            {% csrf_token %}
+                                            <div class="modal-body text-start">
+                                                {{ class.form_class_update|crispy }}
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-info">Submit</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal fade" id="delete{{ class.id }}" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Delete Class</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <form method="post" action="/user/admin/class/delete/{{ class.id }}">
+                                            {% csrf_token %}
+                                            <div class="modal-body text-center">
+                                                Do you really want to delete<br><b>{{ category }} ({{ type }})</b><br>?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-info">Submit</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+</html>

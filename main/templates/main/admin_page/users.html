@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+{% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
+{% load define_action %}
+{% load get_value %}
+<html>
+{% block content %}
+<style>
+.accordion-button:focus {
+  z-index: 1;
+  box-shadow: 0 0 0 .05rem #FFF !important;
+}
+.accordion-button:after {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
+}
+</style>
+<div class="container">
+    {% if user.is_superuser %}
+    <div class="accordion mt-4">
+        {% for type, users in grouped_users.items %}
+        {% if type == 'Coaches' %}
+        {% define "Coach" as user_type %}
+        {% else %}
+        {% define "Student" as user_type %}
+        {% endif %}
+        <div class="accordion-item border-0">
+            <h2 class="accordion-header" id="heading{{ user_type }}">
+                <button type="button" class="accordion-button collapsed border-bottom" style="color:white" data-bs-toggle="collapse" data-bs-target="#collapse{{ user_type }}" aria-expanded="true" aria-controls="collapse{{ user_type }}">
+                    <b>{{ type }}</b>
+                </button>
+            </h2>
+            {% with profile_type=grouped_users|get_value:type %}
+            <div id="collapse{{ user_type }}" class="accordion-collapse collapse {% if forloop.first %}{% endif %}" aria-labelledby="heading{{ user_type }}" data-bs-parent="">
+                <div class="accordion-body">
+                    <button type="button" class="d-flex btn btn-info px-4" data-bs-toggle="modal" data-bs-target="#addUser{{ user_type }}">Add {{ user_type }}</button>
+                    <div class="modal fade" id="addUser{{ user_type }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Add User</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <form method="post" action="/user/admin/user/add/{{ profile_type.group_id }}" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="modal-body text-start">
+                                        {{ form_user_add|crispy }}
+                                        {{ form_user_profile_add|crispy }}
+                                        {{ profile_type.form_profile_add|crispy }}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-info">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2 mb-1 py-2" style="color:#6EE1F8">
+                        <div class="col px-4 my-auto">
+                            <b>Name</b>
+                        </div>
+                        <div class="col px-4 my-auto">
+                            <b>Street</b>
+                        </div>
+                        <div class="col px-4 my-auto">
+                            <b>City</b>
+                        </div>
+                        <div class="col px-4 my-auto">
+                            <b>Phone Number</b>
+                        </div>
+                        <div class="col-3 px-4 my-auto"></div>
+                    </div>
+                    {% for profile in users.profiles %}
+                    <div class="row border-top py-2">
+                        <div class="col px-4 my-auto">
+                            {{ profile.profile.user.user.first_name }} {{ profile.profile.user.user.last_name }}
+                        </div>
+                        <div class="col px-4 my-auto">
+                            {{ profile.profile.user.street }}
+                        </div>
+                        <div class="col px-4 my-auto">
+                            {{ profile.profile.user.city }}
+                        </div>
+                        <div class="col px-4 my-auto">
+                            {{ profile.profile.user.phone_number }}
+                        </div>
+                        <div class="col-3 px-4 my-auto">
+                            <button type="button" class="btn btn-danger float-end ms-1" data-bs-toggle="modal" data-bs-target="#delete{{ profile.profile.user.id }}">Delete</button>
+                            <button type="button" class="btn btn-info float-end" data-bs-toggle="modal" data-bs-target="#update{{ profile.profile.user.id }}">Update</button>
+                        </div>
+                        <div class="modal fade" id="update{{ profile.profile.user.id }}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Update {{ profile.profile.user.user.first_name }} {{ profile.profile.user.user.last_name }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <form method="post" action="/user/admin/user/update/{{ profile_type.group_id }}/{{ profile.profile.id }}">
+                                        {% csrf_token %}
+                                        <div class="modal-body text-start">
+                                            {{ profile.form_user_update|crispy }}
+                                            {{ profile.form_user_profile_update|crispy }}
+                                            {{ profile.form_profile_update|crispy }}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-info">Submit</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="delete{{ profile.profile.user.id }}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Delete User</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <form method="post" action="/user/admin/user/delete/{{ profile_type.group_id }}/{{ profile.profile.id }}">
+                                        {% csrf_token %}
+                                        <div class="modal-body text-center">
+                                            Do you really want to delete<br><b>{{ profile.profile.user.user.first_name }} {{ profile.profile.user.user.last_name }}</b><br>?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-info">Submit</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endwith %}
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}
+</html>
