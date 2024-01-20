@@ -17,8 +17,8 @@ def add_offer(request):
 
 def update_offer(request, offer_id):
     if request.method == 'POST':
-        offer = models.Offer.objects.get(id=offer_id)
-        form_offer_update = forms.OfferUpdateForm(request.POST, request.FILES, instance=offer)
+        form_offer_update = forms.OfferUpdateForm(request.POST, request.FILES,
+                                                  instance=models.Offer.objects.get(id=offer_id))
         if form_offer_update.is_valid():
             form_offer_update.save()
     return redirect('/offer')
@@ -37,6 +37,8 @@ def sign_in(request):
 def get_grouped_offer():
     offer = {}
     for item in models.Offer.objects.all().order_by('category'):
+        if item.type == 'Group':
+            item.__dict__['classes'] = models.Class.objects.filter(offer_id=item.id)
         item.__dict__['form_offer_update'] = forms.OfferUpdateForm(instance=item)
         offer.setdefault(item.category, []).append(item.__dict__)
     return offer

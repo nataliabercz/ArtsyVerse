@@ -19,9 +19,12 @@ def get_upcoming_classes(request):
         user_id = ''
         if request.user in cls.users.all():
             if cls.offer.type == 'Individual':
-                removed_curr_user = cls.users.filter(~Q(email=request.user))[0]
-                user = f'{removed_curr_user.first_name} {removed_curr_user.last_name}'
-                user_id = removed_curr_user.id
+                try:
+                    removed_curr_user = cls.users.filter(~Q(email=request.user))[0]
+                    user = f'{removed_curr_user.first_name} {removed_curr_user.last_name}'
+                    user_id = removed_curr_user.id
+                except:
+                    pass
             if time.strptime(cls.day_name, "%A").tm_wday >= week_day:
                 if cls.start_time >= current_time:
                     classes.append({'name': cls.offer.category,

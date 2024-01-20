@@ -13,7 +13,6 @@ OWNER = 'rick.williams@coach.artsyverse.com'  # superuser - no superuser: admin
 
 @login_required
 def get_calendar(request):
-    # default view - week
     # option to reschedule (only classes) for coaches
     classes = models.Class.objects.all()
     calendar_fields = []
@@ -48,6 +47,7 @@ def get_calendar_events(request):
                     'title': f'{cls.offer.category} ({cls.offer.type[0]})\n{details}\n{cls.location}',
                     'start': datetime.datetime.combine(date, cls.start_time),
                     'end': datetime.datetime.combine(date, cls.end_time),
+                    'is_class': True
                 })
     for activity in activities:
         if activity.type == 'Event':
@@ -56,6 +56,7 @@ def get_calendar_events(request):
                 'title': f'{activity.name}\n{activity.location}',
                 'start': datetime.datetime.combine(activity.date, activity.start_time),
                 'end': datetime.datetime.combine(activity.date, activity.end_time),
+                'is_class': False
             })
     return JsonResponse(out, safe=False)
 
