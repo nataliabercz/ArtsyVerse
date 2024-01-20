@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
 {% load define_action %}
 <html>
 {% block content %}
@@ -12,11 +13,11 @@
     {% define "350" as image_height %}
     {% endif %}
     {% if user.is_authenticated and user.groups.all.0|slugify == 'coaches' %}
-    <button type="button" class="d-flex btn btn-info px-4" data-bs-toggle="modal" data-bs-target="#add{{ activity_type }}">Add</button>
+    <button type="button" class="d-flex btn btn-info px-4" data-bs-toggle="modal" data-bs-target="#addActivity">Add</button>
     {% endif %}
-    <div class="modal fade" id="add{{ activity_type }}" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="addActivity" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content bg-dark">
+            <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Add {{ activity_type }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -24,7 +25,7 @@
                 <form method="post" action="/{{ activity_type|lower }}/add" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="modal-body text-start">
-                        {{ form_activity_add.as_p }}
+                        {{ form_activity_add|crispy }}
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-info">Submit</button>
@@ -33,7 +34,7 @@
             </div>
         </div>
     </div>
-    <div class="card bg-dark border-0">
+    <div class="card border-0">
         {% for type, activity in activities.items %}
         {% if type == activity_type %}
         {% for item in activity %}
@@ -42,11 +43,17 @@
         </div>
         <div class="card-body">
             <div class="row justify-content-start">
-                <div class="col-4 text-center ">
+                <div class="col-4 text-center">
                     <img class="rounded" src="{{ item.image.url }}" alt height="{{ image_height }}">
                 </div>
                 <div class="col">
-                    <p>{{ item.description }}</p>
+                    <p>{{ item.description|safe }}</p>
+                    {% if activity_type == 'Event' %}
+                        <p>{{ item.date }}</p>
+                        <p>{{ item.start_time|date:'h:i A' }} - {{ item.end_time|date:'h:i A' }}</p>
+                        <p>{{ item.location }}</p>
+                        <p>Ticket: ${{ item.ticket_price }}</p>
+                    {% endif %}
                 </div>
             </div>
             {% if user.is_authenticated and user.groups.all.0|slugify == 'coaches' %}
@@ -54,7 +61,7 @@
             <button type="button" class="btn btn-info float-end px-4" data-bs-toggle="modal" data-bs-target="#update{{ item.id }}">Update</button>
             <div class="modal fade" id="update{{ item.id }}" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
-                    <div class="modal-content bg-dark">
+                    <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Update {{ type }}</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -63,7 +70,7 @@
                             {% csrf_token %}
                             <div class="modal-body text-start">
                                 <div class="mb-3">
-                                    {{ item.form_activity_update.as_p }}
+                                    {{ item.form_activity_update|crispy }}
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -75,7 +82,7 @@
             </div>
             <div class="modal fade" id="delete{{ item.id }}" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
-                    <div class="modal-content bg-dark">
+                    <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Delete {{ type }}</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

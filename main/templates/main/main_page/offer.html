@@ -1,14 +1,27 @@
 <!DOCTYPE html>
 {% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
 <html>
 {% block content %}
+<style>
+.accordion-button:focus {
+  z-index: 1;
+  box-shadow: 0 0 0 .05rem #FFF !important;
+}
+.accordion-button:not(.collapsed) {
+  background-color: #3E4449 !important;
+}
+.accordion-button:after {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
+}
+</style>
 <div class="container">
     {% if user.is_superuser %}
     <button type="button" class="d-flex btn btn-info px-4" data-bs-toggle="modal" data-bs-target="#addOffer">Add</button>
     {% endif %}
     <div class="modal fade" id="addOffer" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content bg-dark">
+            <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Add Offer</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -16,7 +29,7 @@
                 <form method="post" action="/offer/add" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="modal-body text-start">
-                        {{ form_offer_add.as_p }}
+                        {{ form_offer_add|crispy }}
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-info">Submit</button>
@@ -25,15 +38,15 @@
             </div>
         </div>
     </div>
-    <div class="accordion mt-4" id="accordionOffer">
+    <div class="accordion mt-4">
         {% for category, offer in grouped_offer.items %}
-        <div class="accordion-item bg-dark border-0">
-            <h2 class="accordion-header" id="heading{{ name }}">
-                <button type="button" class="accordion-button bg-dark collapsed" style="color:white" data-bs-toggle="collapse" data-bs-target="#collapse{{ category|cut:' ' }}" aria-expanded="true" aria-controls="collapse{{ name }}">
+        <div class="accordion-item border-0">
+            <h2 class="accordion-header" id="heading{{ category|cut:' ' }}">
+                <button type="button" class="accordion-button collapsed border-bottom" style="color:white" data-bs-toggle="collapse" data-bs-target="#collapse{{ category|cut:' ' }}" aria-expanded="true" aria-controls="collapse{{ category|cut:' ' }}">
                     <img class="rounded" src="{{ offer.0.image.url }}" alt height=60>&nbsp;&nbsp;&nbsp;<b>{{ category }}</b>
                 </button>
             </h2>
-            <div id="collapse{{ category|cut:' ' }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" aria-labelledby="heading{{ name }}" data-bs-parent="#accordionOffer">
+            <div id="collapse{{ category|cut:' ' }}" class="accordion-collapse collapse {% if forloop.first %}{% endif %}" data-bs-parent="" aria-labelledby="heading{{ category|cut:' ' }}">
                 <div class="accordion-body">
                     {% for item in offer %}
                     {% if user.is_superuser %}
@@ -42,7 +55,7 @@
                     {% endif %}
                     <div class="modal fade" id="update{{ item.id }}" tabindex="-1" aria-hidden="true">
                         <div class="modal-dialog">
-                            <div class="modal-content bg-dark">
+                            <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title">Update {{ item.category }} ({{ item.type }})</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -50,7 +63,7 @@
                                 <form method="post" action="/offer/update/{{ item.id }}" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <div class="modal-body text-start">
-                                        {{ item.form_offer_update.as_p }}
+                                        {{ item.form_offer_update|crispy }}
                                     </div>
                                     <div class="modal-footer">
                                         <button type="submit" class="btn btn-info">Submit</button>
@@ -61,7 +74,7 @@
                     </div>
                     <div class="modal fade" id="delete{{ item.id }}" tabindex="-1" aria-hidden="true">
                         <div class="modal-dialog">
-                            <div class="modal-content bg-dark">
+                            <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title">Delete {{ item.category }} ({{ item.type }})</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -80,30 +93,30 @@
                     </div>
                     <div class="row justify-content-md-center text-center mt-4 mb-4">
                         {% if item.type == 'Individual' %}
-                        <div class="col col-lg-4">
-                            <div class="card rounded-3 bg-dark border-secondary">
-                                <div class="card-header py-3 bg-dark border-0">
-                                    <p class="my-0 fw-normal" style="color:#AED6F1">Single {{ item.type }} Lesson</p>
+                        <div class="col col-lg-5">
+                            <div class="card border-0">
+                                <div class="card-header py-3 border-0" style="background-color:black">
+                                    <p class="my-0 fw-normal" style="color:#EED6CA"><b>Single {{ item.type }} Lesson</b></p>
                                 </div>
-                                <div class="card-body">
-                                    <h4 class="card-title pricing-card-title">${{ item.single_class_price }}<small class="text-body-secondary fw-light">/hr</small></h4>
-                                    <ul class="list-unstyled mt-3">
-                                        {{ item.description|safe  }}
+                                <div class="card-body rounded-bottom" style="background-color:#EED6CA;color:black">
+                                    <h4 class="card-title pricing-card-title"><b>${{ item.single_class_price }}</b><small class="text-body-secondary fw-light">/hr</small></h4>
+                                    <ul class="list-unstyled mt-3 text-start">
+                                        {{ item.single_class_description|safe  }}
                                     </ul>
                                     <!--                                    you can sign up immediately - choose coach, date, pay for single lesson and come to school-->
                                     <!--                                    <button type="button" class="w-100 btn btn-lg btn-outline-info mt-4">Sign Up</button>-->
                                 </div>
                             </div>
                         </div>
-                        <div class="col col-lg-4">
-                            <div class="card rounded-3 bg-dark border-secondary">
-                                <div class="card-header py-3 bg-dark border-0">
-                                    <p class="my-0 fw-normal" style="color:#AED6F1">Monthly {{ item.type }} Lessons</p>
+                        <div class="col col-lg-5">
+                            <div class="card border-0">
+                                <div class="card-header py-3 border-0" style="background-color:black">
+                                    <p class="my-0 fw-normal" style="color:#EED6CA"><b>Monthly {{ item.type }} Lessons</b></p>
                                 </div>
-                                <div class="card-body">
-                                    <h4 class="card-title pricing-card-title">${{ item.monthly_class_price }}<small class="text-body-secondary fw-light">/mo</small></h4>
-                                    <ul class="list-unstyled mt-3">
-                                        {{ item.description|safe }}
+                                <div class="card-body rounded-bottom" style="background-color:#EED6CA;color:black">
+                                    <h4 class="card-title pricing-card-title"><b>${{ item.monthly_class_price }}</b><small class="text-body-secondary fw-light">/mo</small></h4>
+                                    <ul class="list-unstyled mt-3 text-start">
+                                        {{ item.monthly_class_description|safe }}
                                     </ul>
                                     <!--                                    how to sign up? choose coach, day and start/end time<br>-->
                                     <!--                                    what's next? creation of account? payment? think about it-->
@@ -112,18 +125,30 @@
                             </div>
                         </div>
                         {% else %}
-                        <div class="col col-lg-4">
-                            <div class="card rounded-3 bg-dark border-secondary">
-                                <div class="card-header py-3 bg-dark border-0">
-                                    <p class="my-0 fw-normal" style="color:#AED6F1">Monthly {{ item.type }} Lessons</p>
+                        <div class="col col-lg-5">
+                            <div class="card border-0">
+                                <div class="card-header py-3 border-0" style="background-color:black">
+                                    <p class="my-0 fw-normal" style="color:#EED6CA"><b>Monthly {{ item.type }} Lessons</b></p>
                                 </div>
-                                <div class="card-body">
-                                    <h4 class="card-title pricing-card-title">${{ item.monthly_class_price }}<small class="text-body-secondary fw-light">/mo</small></h4>
-                                    <ul class="list-unstyled mt-3">
-                                        {{ item.description|safe }}<br>
-                                        day<br>
-                                        start - end time<br>
-                                        coach
+                                <div class="card-body rounded-bottom" style="background-color:#EED6CA;color:black">
+                                    <h4 class="card-title pricing-card-title"><b>${{ item.monthly_class_price }}</b><small class="text-body-secondary">/mo</small></h4>
+                                    <ul class="list-unstyled mt-3 text-start">
+                                        {{ item.monthly_class_description|safe }}
+                                        {% for class in item.classes %}
+                                        <br>
+                                        <b>{{ class.level }} Group:</b>
+                                        <ul>
+                                            {% if class.age_group != 'Any' %}
+                                            <li>{{ class.age_group|lower }}</li>
+                                            {% else %}
+                                            <li>youth and adults</li>
+                                            {% endif %}
+                                            {% if class.details %}
+                                            <li>{{ class.details }}</li>
+                                            {% endif %}
+                                            <li>{{ class.day_name }}, {{ class.start_time|date:'h:i A' }}</li>
+                                        </ul>
+                                        {% endfor %}
                                     </ul>
                                     <!--                                    only sign up - no need to choose date of time - it's clear<br>-->
                                     <!--                                    like monthly individual - what's next?-->

@@ -1,21 +1,31 @@
 <!DOCTYPE html>
 {% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
 <html>
 {% block content %}
+<style>
+.accordion-button:focus {
+  z-index: 1;
+  box-shadow: 0 0 0 .05rem #FFF !important;
+}
+.accordion-button:after {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
+}
+</style>
 <div class="container">
-    <div class="accordion mt-4" id="accordionAssignment">
+    <div class="accordion mt-4">
         {% for name, grouped_assignment in grouped_assignments.items %}
-        <div class="accordion-item bg-dark border-0">
+        <div class="accordion-item border-0">
             <h2 class="accordion-header" id="heading{{ name }}">
-                <button type="button" class="accordion-button bg-dark collapsed" style="color:white" data-bs-toggle="collapse" data-bs-target="#collapse{{ name|cut:' ' }}" aria-expanded="true" aria-controls="collapse{{ name }}">
+                <button type="button" class="accordion-button collapsed border-bottom" style="color:white" data-bs-toggle="collapse" data-bs-target="#collapse{{ name|cut:' ' }}" aria-expanded="true" aria-controls="collapse{{ name }}">
                     <b>{{ name }}</b>
                 </button>
             </h2>
-            <div id="collapse{{ name|cut:' ' }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" aria-labelledby="heading{{ name }}" data-bs-parent="#accordionAssignment">
+            <div id="collapse{{ name|cut:' ' }}" class="accordion-collapse collapse {% if forloop.first %}{% endif %}" aria-labelledby="heading{{ name }}" data-bs-parent="">
                 <div class="accordion-body">
                     {% for type, assignment_dict in grouped_assignment.items %}
                     <div class="row text-center">
-                        <button type="button" class="btn btn-secondary" disabled>{{ type|upper }} LESSONS</button>
+                        <button type="button" class="btn" style="background-color:#CFF1F8;color:black" disabled><b>{{ type|upper }}</b></button>
                     </div>
                     {% if type == 'Individual' %}
                     {% if user.groups.all.0|slugify != 'coaches' %}
@@ -23,7 +33,7 @@
                     {% endif %}
                     <div class="modal fade" id="request{{ assignment_dict.class_id }}" tabindex="-1" aria-hidden="true">
                         <div class="modal-dialog">
-                            <div class="modal-content bg-dark">
+                            <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title">Request Assignment</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -31,7 +41,7 @@
                                 <form method="post" action="/user/assignment/request/{{ assignment_dict.class_id }}">
                                     {% csrf_token %}
                                     <div class="modal-body text-start">
-                                        {{ assignment_dict.form_assignment_request.as_p }}
+                                        {{ assignment_dict.form_assignment_request|crispy }}
                                     </div>
                                     <div class="modal-footer">
                                         <button type="submit" class="btn btn-info">Submit</button>
@@ -42,11 +52,11 @@
                     </div>
                     {% else %}
                     {% if user.groups.all.0|slugify == 'coaches' %}
-                    <button type="button" class="btn btn-info px-4 mt-2 mb-2" data-bs-toggle="modal" data-bs-target="#add{{ assignment_dict.class_id }}">Add</button>
+                    <button type="button" class="btn btn-info px-4 mt-2 mb-2" data-bs-toggle="modal" data-bs-target="#addAssignment{{ assignment_dict.class_id }}">Add</button>
                     {% endif %}
-                    <div class="modal fade" id="add{{ assignment_dict.class_id }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal fade" id="addAssignment{{ assignment_dict.class_id }}" tabindex="-1" aria-hidden="true">
                         <div class="modal-dialog">
-                            <div class="modal-content bg-dark">
+                            <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title">Add Assignment</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -54,7 +64,7 @@
                                 <form method="post" action="/user/assignment/request/{{ assignment_dict.class_id }}">
                                     {% csrf_token %}
                                     <div class="modal-body text-start">
-                                        {{ assignment_dict.form_assignment_request.as_p }}
+                                        {{ assignment_dict.form_assignment_request|crispy }}
                                     </div>
                                     <div class="modal-footer">
                                         <button type="submit" class="btn btn-info">Submit</button>
@@ -65,38 +75,32 @@
                     </div>
                     {% endif %}
                     {% for assignment in assignment_dict.assignments %}
-                    <div class="card bg-dark border-0">
+                    <div class="card border-0">
                         <div class="card-header border-bottom border-secondary bg-dark text-center mt-4">
                             <b>{{ assignment.name }}</b>
                         </div>
                         <div class="card-body">
                             <p><i>{{ assignment.skill_degree }}</i></p>
                             {% if type == 'Individual' %}
+                            {% if assignment.coach_notes %}
                             <p><b>Coach Notes:</b></p>
-                            {% if assignment.coach_notes %}
-                            <p>{{ assignment.coach_notes }}</p>
-                            {% else %}
-                            <p>[   ]</p>
+                            <p>{{ assignment.coach_notes|safe }}</p>
                             {% endif %}
-                            <p><b>Student Notes:</b></p>
                             {% if assignment.student_notes %}
-                            <p>{{ assignment.student_notes }}</p>
-                            {% else %}
-                            <p>[   ]</p>
+                            <p><b>Student Notes:</b></p>
+                            <p>{{ assignment.student_notes|safe }}</p>
                             {% endif %}
                             {% else %}
-                            <p><b>Notes:</b></p>
                             {% if assignment.coach_notes %}
-                            <p>{{ assignment.coach_notes }}</p>
-                            {% else %}
-                            <p>[   ]</p>
+                            <p><b>Notes:</b></p>
+                            <p>{{ assignment.coach_notes|safe }}</p>
                             {% endif %}
                             {% endif %}
                             {% if type == 'Individual' or user.is_authenticated and user.groups.all.0|slugify == 'coaches' %}
                             <button type="button" class="btn btn-info float-end px-4" data-bs-toggle="modal" data-bs-target="#update{{ assignment.id }}">Update</button>
                             <div class="modal fade" id="update{{ assignment.id }}" tabindex="-1" aria-hidden="true">
                                 <div class="modal-dialog">
-                                    <div class="modal-content bg-dark">
+                                    <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title">Update {{ type }}</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -105,7 +109,7 @@
                                             {% csrf_token %}
                                             <div class="modal-body text-start">
                                                 <div class="mb-3">
-                                                    {{ assignment.form_assignment_update.as_p }}
+                                                    {{ assignment.form_assignment_update|crispy }}
                                                 </div>
                                             </div>
                                             <div class="modal-footer">

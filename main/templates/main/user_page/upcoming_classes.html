@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 {% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
 <html>
 {% block content %}
 <div class="container">
     <h4 class="text-center mt-4 mb-2">UPCOMING CLASSES</h4>
-    <div class="card bg-dark border-0">
+    <div class="card border-0">
         {% for class in classes %}
         <div class="card-header border-bottom border-secondary bg-dark text-center mt-4">
             <b>{{ class.name }} ({{ class.type }})</b>
@@ -20,9 +21,9 @@
                     <p>{{ class.location }}</p>
                     {% if user.groups.all.0|slugify == 'coaches' %}
                     {% if class.type == 'Individual' %}
-                    <a href="/user/assignments/{{ class.class_id }}/{{ class.user_id }}" class="btn btn-secondary px-4" role="button">{{ class.user }}</a>
+                    <a href="/user/assignments/{{ class.class_id }}/{{ class.user_id }}" class="btn px-4" role="button" style="background-color:#EED6CA;color:black">{{ class.user }}</a>
                     {% else %}
-                    <a href="/user/assignments/{{ class.class_id }}" class="btn btn-secondary px-4" role="button">{{ class.user }}</a>
+                    <a href="/user/assignments/{{ class.class_id }}" class="btn px-4" role="button" style="background-color:#EED6CA;color:black">{{ class.user }}</a>
                     {% endif %}
                     {% else %}
                     <p>{{ class.user }}</p>

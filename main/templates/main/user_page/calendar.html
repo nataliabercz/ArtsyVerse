@@ -1,10 +1,22 @@
 <!DOCTYPE html>
 {% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
 <html>
 {% block content %}
+<style>
+.fc-today {
+    background: #3E4449 !important;
+    border-top: 1px solid white !important;
+    border-right: 1px solid white !important;
+    border-left: 1px solid white !important;
+}
+.fc table{
+    border-collapse: separate !important;
+}
+</style>
 <div class="container">
     <div class="col-md-12">
-        <div id='calendar'></div>
+        <div id="calendar" class="fc fc-bootstrap4 fc-ltr mt-4"></div>
     </div>
 </div>
 <script>
@@ -26,24 +38,29 @@
             defaultView: 'agendaWeek',
             minTime: '10:00',
             events: 'events',
+            eventColor: '#EED6CA',
+            eventBorderColor: 'black',
+            eventTextColor: 'black',
 
             eventClick: function (event) {
-<!--            if event is class and user is coach -> MODAL-->
-                if (confirm("Are you sure you want to reschedule this class?")) {
-                    var id = event.id;
-                    $.ajax({
-                        type: "GET",
-                        url: '/user/calendar/reschedule',
-                        data: {'id': id},
-                        dataType: "json",
-                        success: function (data) {
-                            calendar.fullCalendar('refetchEvents');
-                            alert('Event Rescheduled');
-                        },
-                        error: function (data) {
-                            alert('There is a problem!!!');
-                        }
-                    });
+<!--            if user is coach -> MODAL-->
+                if (event.is_class) {
+                    if (confirm("Are you sure you want to reschedule this class?")) {
+                        var id = event.id;
+                        $.ajax({
+                            type: "GET",
+                            url: '/user/calendar/reschedule',
+                            data: {'id': id},
+                            dataType: "json",
+                            success: function (data) {
+                                calendar.fullCalendar('refetchEvents');
+                                alert('Event Rescheduled');
+                            },
+                            error: function (data) {
+                                alert('There is a problem!!!');
+                            }
+                        });
+                    }
                 }
             },
         });

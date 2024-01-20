@@ -1,14 +1,20 @@
 <!DOCTYPE html>
 {% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
 <html>
 {% block content %}
+<style>
+.asteriskField {
+    display: none;
+}
+</style>
 <div class="container">
     {% if user.is_superuser %}
     <button type="button" class="d-flex btn btn-info px-4 mb-4" data-bs-toggle="modal" data-bs-target="#updateContact">Update</button>
     {% endif %}
     <div class="modal fade" id="updateContact" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content bg-dark">
+            <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Update Contact Data</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -16,7 +22,7 @@
                 <form method="post" action="/contact/update">
                     {% csrf_token %}
                     <div class="modal-body text-start">
-                        {{ contact_data.form_contact_update.as_p }}
+                        {{ contact_data.form_contact_update|crispy }}
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-info">Submit</button>
@@ -25,7 +31,7 @@
             </div>
         </div>
     </div>
-    <div class="card bg-dark border-0 mt-2">
+    <div class="card border-0 mt-2">
         <div class="card-header border-bottom border-secondary bg-dark text-center mt-4">
             <b>Address Info</b>
         </div>
@@ -41,9 +47,11 @@
             </div>
             {% endfor %}
         </div>
+        {% if contact_data.main_contact %}
         <div class="card-header border-bottom border-secondary bg-dark text-center mt-4">
             <b>Main Contact</b>
         </div>
+        {% endif %}
         <div class="card-body">
             <p class="card-text"><b>{{ contact_data.main_contact.user.user.first_name }} {{ contact_data.main_contact.user.user.last_name }}</b></p>
             <p class="card-text">

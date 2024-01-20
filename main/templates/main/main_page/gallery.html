@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
 <html>
 {% block content %}
 <div class="container text-center">
@@ -8,7 +9,7 @@
     {% endif %}
     <div class="modal fade" id="updateGallery" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content bg-dark">
+            <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Upload Image</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -17,7 +18,7 @@
                     {% csrf_token %}
                     <div class="modal-body text-start">
                         <div class="mb-3">
-                            {{ form_image_add.as_p }}
+                            {{ form_image_add|crispy }}
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -37,7 +38,7 @@
         </div>
         <div class="modal fade" id="delete{{ image.id }}" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
-                <div class="modal-content bg-dark">
+                <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Delete {{ type }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

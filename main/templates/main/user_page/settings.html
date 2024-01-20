@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
 <html>
 {% block content %}
 <div class="container">
@@ -12,7 +13,7 @@
     </div>
     <div class="modal fade" id="passwordModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content bg-dark">
+            <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Change Password</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -21,7 +22,7 @@
                     {% csrf_token %}
                     <div class="modal-body text-start">
                         <div class="mb-3">
-                            {{ form_change_password.as_p }}
+                            {{ form_change_password|crispy }}
                         </div>
                     </div>
                     <div class="modal-footer">

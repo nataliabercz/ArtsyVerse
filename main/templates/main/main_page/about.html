@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
 <html>
 {% block content %}
 <div class="container">
@@ -8,7 +9,7 @@
     {% endif %}
     <div class="modal fade" id="updateAbout" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content bg-dark">
+            <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Update Description</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -16,7 +17,7 @@
                 <form method="post" action="/about/update">
                     {% csrf_token %}
                     <div class="modal-body text-start">
-                        {{ form_about_update.as_p }}
+                        {{ form_about_update|crispy }}
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-info">Submit</button>
@@ -26,12 +27,12 @@
         </div>
     </div>
     <div class="row justify-content-start mt-4">
-        <div class="col-4">
+        <div class="col-4 mx-4">
             <img class="rounded" src="/media/info_building.png" alt height=230>
             <img class="rounded mt-3" src="/media/info_stage.png" alt height=230>
             <img class="rounded mt-3" src="/media/info_performance.png" alt height=230>
         </div>
-        <div class="col">
+        <div class="col-7">
             {{ info.0.description|safe }}
         </div>
     </div>

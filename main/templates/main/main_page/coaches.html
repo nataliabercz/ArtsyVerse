@@ -1,33 +1,10 @@
 <!DOCTYPE html>
 {% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
 <html>
 {% block content %}
 <div class="container">
-    {% if user.is_superuser %}
-    <button type="button" class="d-flex btn btn-info px-4" data-bs-toggle="modal" data-bs-target="#add{{ activity_type }}">Add</button>
-    {% endif %}
-    <div class="modal fade" id="add{{ activity_type }}" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content bg-dark">
-                <div class="modal-header">
-                    <h5 class="modal-title">Add {{ activity_type }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form method="post" action="/coach/add" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="modal-body text-start">
-                        # form user<br>
-                        # form userprofile
-                        {{ form_coach_add.as_p }}
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-info">Submit</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="card bg-dark border-0">
+    <div class="card border-0">
         {% for coach in coaches %}
         <div class="card-header border-bottom border-secondary bg-dark text-center mt-4">
             <b>{{ coach.name }}</b>
@@ -46,28 +23,24 @@
                     {% endfor %}
                 </div>
             </div>
-            {% if user.groups.all.0|slugify == 'coaches' and coach.name == user.get_full_name or user.is_superuser %}
-            {% if user.is_superuser %}
-            <button type="button" class="btn btn-danger float-end px-4 ms-1" data-bs-toggle="modal" data-bs-target="#delete{{ coach.id }}">Delete</button>
-            {% endif %}
+            {% if user.is_superuser%}
+<!--            {% if user.is_superuser %}-->
+<!--            <button type="button" class="btn btn-danger float-end px-4 ms-1" data-bs-toggle="modal" data-bs-target="#delete{{ coach.id }}">Delete</button>-->
+<!--            {% endif %}-->
             <button type="button" class="btn btn-info float-end px-4" data-bs-toggle="modal" data-bs-target="#update{{ coach.id }}">Update</button>
             {% endif %}
             <div class="modal fade" id="update{{ coach.id }}" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
-                    <div class="modal-content bg-dark">
+                    <div class="modal-content">
                         <div class="modal-header">
-                            {% if user.is_superuser %}
-                            <h5 class="modal-title">Update Coach</h5>
-                            {% else %}
                             <h5 class="modal-title">Update Description</h5>
-                            {% endif %}
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <form method="post" action="/coach/update/{{ coach.id }}">
                             {% csrf_token %}
                             <div class="modal-body text-start">
                                 <div class="mb-3">
-                                    {{ coach.form_coach_update.as_p }}
+                                    {{ coach.form_coach_update|crispy }}
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -77,25 +50,25 @@
                     </div>
                 </div>
             </div>
-            <div class="modal fade" id="delete{{ coach.id }}" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content bg-dark">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Delete {{ type }}</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <form method="post" action="/coach/delete/{{ coach.id }}">
-                            {% csrf_token %}
-                            <div class="modal-body text-center">
-                                Do you really want to delete<br><b>{{ coach.name }}</b><br>?
-                            </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-info">Submit</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+<!--            <div class="modal fade" id="delete{{ coach.id }}" tabindex="-1" aria-hidden="true">-->
+<!--                <div class="modal-dialog">-->
+<!--                    <div class="modal-content">-->
+<!--                        <div class="modal-header">-->
+<!--                            <h5 class="modal-title">Delete {{ type }}</h5>-->
+<!--                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+<!--                        </div>-->
+<!--                        <form method="post" action="/coach/delete/{{ coach.id }}">-->
+<!--                            {% csrf_token %}-->
+<!--                            <div class="modal-body text-center">-->
+<!--                                Do you really want to delete<br><b>{{ coach.name }}</b><br>?-->
+<!--                            </div>-->
+<!--                            <div class="modal-footer">-->
+<!--                                <button type="submit" class="btn btn-info">Submit</button>-->
+<!--                            </div>-->
+<!--                        </form>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
         </div>
         {% endfor %}
     </div>
