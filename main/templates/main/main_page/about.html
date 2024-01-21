@@ -5,16 +5,40 @@
 {% block content %}
 <div class="container">
     {% if user.is_superuser %}
-    <button type="button" class="d-flex btn btn-info px-4 mb-4" data-bs-toggle="modal" data-bs-target="#updateAbout">Update</button>
+    <button type="button" class="btn btn-info px-4 ms-1" data-bs-toggle="modal" data-bs-target="#updateImages">Upload Image</button>
+    {% if not info %}
+    <button type="button" class="btn btn-info px-4" data-bs-toggle="modal" data-bs-target="#updateInfo">Add School Data</button>
+    {% else %}
+    <button type="button" class="btn btn-info px-4" data-bs-toggle="modal" data-bs-target="#updateInfo">Update</button>
     {% endif %}
-    <div class="modal fade" id="updateAbout" tabindex="-1" aria-hidden="true">
+    {% endif %}
+    <div class="modal fade" id="updateImages" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Update Description</h5>
+                    <h5 class="modal-title">Upload Image</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="post" action="/about/update">
+                <form method="post" action="/about/upload" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-body text-start">
+                        {{ form_info_image_upload|crispy }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-info">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="updateInfo" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Update School Data</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" action="/about/update" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="modal-body text-start">
                         {{ form_about_update|crispy }}
@@ -28,9 +52,34 @@
     </div>
     <div class="row justify-content-start mt-4">
         <div class="col-4 mx-4">
-            <img class="rounded" src="/media/info_building.png" alt height=230>
-            <img class="rounded mt-3" src="/media/info_stage.png" alt height=230>
-            <img class="rounded mt-3" src="/media/info_performance.png" alt height=230>
+            {% for image in images %}
+            <div>
+                {% if user.is_superuser %}
+                <button type="button" class="btn-close btn-close-white btn-danger float-end" data-bs-toggle="modal" data-bs-target="#delete{{ image.id }}"></button>
+                {% endif %}
+<!--                <img class="rounded mb-2" src="{{ image.image.url }}" alt height=370>-->
+                <img class="rounded" src="{{ image.image.url }}" alt height=230>
+            </div>
+            <div class="modal fade" id="delete{{ image.id }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Delete {{ type }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form method="post" action="/gallery/delete/{{ image.id }}">
+                            {% csrf_token %}
+                            <div class="modal-body text-center">
+                                Do you really want to delete this image?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-info">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
         </div>
         <div class="col-7">
             {{ info.0.description|safe }}

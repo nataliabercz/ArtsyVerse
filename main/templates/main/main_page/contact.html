@@ -32,6 +32,7 @@
         </div>
     </div>
     <div class="card border-0 mt-2">
+        {% if contact_data.address %}
         <div class="card-header border-bottom border-secondary bg-dark text-center mt-4">
             <b>Address Info</b>
         </div>
@@ -47,40 +48,41 @@
             </div>
             {% endfor %}
         </div>
-        {% if contact_data.main_contact %}
+        {% endif %}
+        {% if contact_data.main_contact or contact_data.address %}
         <div class="card-header border-bottom border-secondary bg-dark text-center mt-4">
             <b>Main Contact</b>
         </div>
-        {% endif %}
         <div class="card-body">
             <p class="card-text"><b>{{ contact_data.main_contact.user.user.first_name }} {{ contact_data.main_contact.user.user.last_name }}</b></p>
             <p class="card-text">
-                <img class="rounded" src="/media/email.png" alt width="40">&nbsp;&nbsp;
+                <img class="rounded" src="/media/icons/email.png" alt width="40">&nbsp;&nbsp;
                 {{ contact_data.main_contact.user.user.email }}
             </p>
             <p class="card-text">
-                <img class="rounded" src="/media/phone.png" alt width="40">&nbsp;&nbsp;
+                <img class="rounded" src="/media/icons/phone.png" alt width="40">&nbsp;&nbsp;
                 {{ contact_data.main_contact.user.phone_number }}
             </p>
         </div>
+        {% endif %}
         {% if contact_data.additional_contacts %}
         <div class="card-header border-bottom border-secondary bg-dark text-center mt-4">
             <b>Additional Contacts</b>
         </div>
-        {% endif %}
         {% for contact in contact_data.additional_contacts %}
         <div class="card-body">
             <p class="card-text"><b>{{ contact.user.user.first_name }} {{ contact.user.user.last_name }}</b></p>
             <p class="card-text">
-                <img class="rounded" src="/media/email.png" alt width="40">&nbsp;&nbsp;
+                <img class="rounded" src="/media/icons/email.png" alt width="40">&nbsp;&nbsp;
                 {{ contact.user.user.email }}
             </p>
             <p class="card-text">
-                <img class="rounded" src="/media/phone.png" alt width="40">&nbsp;&nbsp;
+                <img class="rounded" src="/media/icons/phone.png" alt width="40">&nbsp;&nbsp;
                 {{ contact.user.phone_number }}
             </p>
         </div>
         {% endfor %}
+        {% endif %}
     </div>
 </div>
 {% endblock %}

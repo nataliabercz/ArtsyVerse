@@ -4,7 +4,7 @@
 <html>
 {% block content %}
 <div class="container text-center">
-    {% if user.is_authenticated and user.groups.all.0|slugify == 'coaches' %}
+    {% if user.is_authenticated and user.groups.all.0|slugify == 'coaches' or user.is_superuser %}
     <button type="button" class="d-flex btn btn-info px-4" data-bs-toggle="modal" data-bs-target="#updateGallery">Upload</button>
     {% endif %}
     <div class="modal fade" id="updateGallery" tabindex="-1" aria-hidden="true">
@@ -18,7 +18,7 @@
                     {% csrf_token %}
                     <div class="modal-body text-start">
                         <div class="mb-3">
-                            {{ form_image_add|crispy }}
+                            {{ form_gallery_image_upload|crispy }}
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -31,7 +31,7 @@
     <div class="row row-cols-md-2 mt-4">
         {% for image in images %}
         <div>
-            {% if user.is_authenticated and user.groups.all.0|slugify == 'coaches' %}
+            {% if user.is_authenticated and user.groups.all.0|slugify == 'coaches' or user.is_superuser %}
             <button type="button" class="btn-close btn-close-white btn-danger float-end" data-bs-toggle="modal" data-bs-target="#delete{{ image.id }}"></button>
             {% endif %}
             <img class="rounded mb-2" src="{{ image.image.url }}" alt height=370>

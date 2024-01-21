@@ -10,22 +10,25 @@
   z-index: 1;
   box-shadow: 0 0 0 .05rem #FFF !important;
 }
+.accordion-button:not(.collapsed) {
+  background-color: #3E4449 !important;
+}
 .accordion-button:after {
   background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
 }
 </style>
 <div class="container">
     {% if user.is_superuser %}
+    {% for type, users in grouped_users.items %}
+    {% if type == 'Coaches' %}
+    {% define "Coach" as user_type %}
+    {% else %}
+    {% define "Student" as user_type %}
+    {% endif %}
     <div class="accordion mt-4">
-        {% for type, users in grouped_users.items %}
-        {% if type == 'Coaches' %}
-        {% define "Coach" as user_type %}
-        {% else %}
-        {% define "Student" as user_type %}
-        {% endif %}
         <div class="accordion-item border-0">
             <h2 class="accordion-header" id="heading{{ user_type }}">
-                <button type="button" class="accordion-button collapsed border-bottom" style="color:white" data-bs-toggle="collapse" data-bs-target="#collapse{{ user_type }}" aria-expanded="true" aria-controls="collapse{{ user_type }}">
+                <button type="button" class="accordion-button collapsed border-bottom" style="color:white" data-bs-toggle="collapse" data-bs-target="#collapse{{ user_type }}">
                     <b>{{ type }}</b>
                 </button>
             </h2>
@@ -54,6 +57,7 @@
                             </div>
                         </div>
                     </div>
+                    {% if users.profiles %}
                     <div class="row mt-2 mb-1 py-2" style="color:#6EE1F8">
                         <div class="col px-4 my-auto">
                             <b>Name</b>
@@ -69,10 +73,11 @@
                         </div>
                         <div class="col-3 px-4 my-auto"></div>
                     </div>
+                    {% endif %}
                     {% for profile in users.profiles %}
                     <div class="row border-top py-2">
                         <div class="col px-4 my-auto">
-                            {{ profile.profile.user.user.first_name }} {{ profile.profile.user.user.last_name }}
+                            {{ profile.last_name }} {{ profile.first_name }}
                         </div>
                         <div class="col px-4 my-auto">
                             {{ profile.profile.user.street }}

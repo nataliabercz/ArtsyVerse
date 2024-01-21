@@ -14,7 +14,11 @@
 </style>
 <div class="container">
     {% if user.is_superuser %}
+    {% if not offer %}
+    <a class="btn btn-info" href="/offer">Add Offer</a>
+    {% else %}
     <button type="button" class="d-flex btn btn-info px-4" data-bs-toggle="modal" data-bs-target="#addClass">Add</button>
+    {% endif %}
     <div class="modal fade" id="addClass" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
