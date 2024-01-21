@@ -9,7 +9,7 @@
     {% if not info %}
     <button type="button" class="btn btn-info px-4" data-bs-toggle="modal" data-bs-target="#updateInfo">Add School Data</button>
     {% else %}
-    <button type="button" class="btn btn-info px-4" data-bs-toggle="modal" data-bs-target="#updateInfo">Update</button>
+    <button type="button" class="btn btn-info px-4" data-bs-toggle="modal" data-bs-target="#updateInfo">Update School Data</button>
     {% endif %}
     {% endif %}
     <div class="modal fade" id="updateImages" tabindex="-1" aria-hidden="true">
@@ -57,17 +57,16 @@
                 {% if user.is_superuser %}
                 <button type="button" class="btn-close btn-close-white btn-danger float-end" data-bs-toggle="modal" data-bs-target="#delete{{ image.id }}"></button>
                 {% endif %}
-<!--                <img class="rounded mb-2" src="{{ image.image.url }}" alt height=370>-->
                 <img class="rounded" src="{{ image.image.url }}" alt height=230>
             </div>
             <div class="modal fade" id="delete{{ image.id }}" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Delete {{ type }}</h5>
+                            <h5 class="modal-title">Delete Image</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <form method="post" action="/gallery/delete/{{ image.id }}">
+                        <form method="post" action="/about/delete/{{ image.id }}">
                             {% csrf_token %}
                             <div class="modal-body text-center">
                                 Do you really want to delete this image?

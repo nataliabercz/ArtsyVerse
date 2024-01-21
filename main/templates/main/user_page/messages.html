@@ -20,6 +20,9 @@
 }
 </style>
 <div class="container">
+    {% if user.is_superuser and not user.groups.all.0|slugify == 'coaches' or not user.groups.all.0|slugify == 'students' %}
+    ADMIN THAT IS NOT COACH CAN'T SEND MESSAGES
+    {% else %}
     <div class="card border-0">
         <div class="row">
             <div class="col-12 col-lg-5 col-xl-3">
@@ -122,6 +125,7 @@
             </div>
         </div>
     </div>
+    {% endif %}
 </div>
 {% endblock %}
 </html>

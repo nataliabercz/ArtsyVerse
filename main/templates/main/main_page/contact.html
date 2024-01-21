@@ -10,7 +10,11 @@
 </style>
 <div class="container">
     {% if user.is_superuser %}
-    <button type="button" class="d-flex btn btn-info px-4 mb-4" data-bs-toggle="modal" data-bs-target="#updateContact">Update</button>
+    {% if not contact_data %}
+    <button type="button" class="d-flex btn btn-info px-4 mb-4" data-bs-toggle="modal" data-bs-target="#updateContact">Add School Data</button>
+    {% else %}
+    <button type="button" class="d-flex btn btn-info px-4 mb-4" data-bs-toggle="modal" data-bs-target="#updateContact">Update Contact Data</button>
+    {% endif %}
     {% endif %}
     <div class="modal fade" id="updateContact" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
@@ -19,7 +23,7 @@
                     <h5 class="modal-title">Update Contact Data</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="post" action="/contact/update">
+                <form method="post" action="/contact/update" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="modal-body text-start">
                         {{ contact_data.form_contact_update|crispy }}
