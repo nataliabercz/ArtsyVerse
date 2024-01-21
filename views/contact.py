@@ -12,6 +12,7 @@ def update_contact(request):
     if request.method == 'POST':
         form_contact_update = forms.ContactUpdateForm(request.POST, instance=models.Info.objects.
                                                       get(id=models.Info.objects.all()[0].id))
+        print(form_contact_update)
         if form_contact_update.is_valid():
             form_contact_update.save()
     return redirect('/contact')

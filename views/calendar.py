@@ -8,7 +8,6 @@ from main import models
 
 SEASON_START = '2023-09-01'
 SEASON_END = '2024-06-30'
-OWNER = 'rick.williams@coach.artsyverse.com'  # superuser - no superuser: admin
 
 
 @login_required

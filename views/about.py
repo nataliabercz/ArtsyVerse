@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from main import models, forms
 
 HTML_TEMPLATE = 'main/main_page/about.html'
@@ -40,5 +40,7 @@ def upload_info_image(request):
     return redirect('/about')
 
 
-def delete_info_image(request):
-    pass
+def delete_info_image(request, image_id):
+    if request.method == 'POST':
+        get_object_or_404(models.InfoImage, pk=image_id).delete()
+    return redirect('/about')

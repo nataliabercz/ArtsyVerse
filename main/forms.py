@@ -51,6 +51,9 @@ class AboutUpdateForm(forms.ModelForm):
 
 
 class ContactUpdateForm(forms.ModelForm):
+    logo = forms.CharField(widget=forms.HiddenInput())
+    favicon = forms.CharField(widget=forms.HiddenInput())
+
     class Meta:
         model = models.Info
         fields = '__all__'
@@ -61,8 +64,6 @@ class ContactUpdateForm(forms.ModelForm):
                    'state': forms.TextInput(attrs={'placeholder': 'State'}),
                    'zipcode': forms.TextInput(attrs={'placeholder': 'Zipcode'}),
                    'slogan': forms.HiddenInput(),
-                   'logo': forms.HiddenInput(),
-                   'favicon': forms.HiddenInput(),
                    'description': forms.HiddenInput()}
 
 
