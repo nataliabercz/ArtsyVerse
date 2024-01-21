@@ -1,4 +1,4 @@
-from main import forms
+from main import models, forms
 
 NAVBAR = {'About': '/about', 'Coaches': '/coaches', 'Events': '/events', 'Gallery': '/gallery', 'Offer': '/offer',
           'Contact': '/contact'}
@@ -10,20 +10,30 @@ COACH_DOMAIN = 'coach.artsyverse.com'
 
 
 def set_navbar(request):
+    school_data = {}
+    try:
+        info = models.Info.objects.all()[0]
+        school_data['name'] = info.school_name
+        if info.slogan:
+            school_data['slogan'] = f'| {info.slogan}'
+        school_data['logo'] = f'/media/{info.logo}'
+        school_data['favicon'] = f'/media/{info.favicon}'
+    except IndexError:
+        school_data['name'] = 'School Name'
+        school_data['slogan'] = ' | Slogan'
+        school_data['logo'] = '/media/icons/logo_example.png'
+        school_data['favicon'] = f'/media/icons/favicon_example.ico'
     # maybe some regex here
     if '/user' in str(request) or '/login' in str(request) and str(request.user) != 'AnonymousUser':
-        if COACH_DOMAIN in str(request.user):
+        if COACH_DOMAIN in str(request.user) or request.user.is_superuser:
+            # request.user.group == 'Coaches'
             navbar = COACH_NAVBAR
         else:
             navbar = STUDENT_NAVBAR
     else:
         navbar = NAVBAR
-    return {'navbar': navbar}
+    return {'school_data': school_data, 'navbar': navbar}
 
 
 def login_form(request):
     return {'login_form': forms.LoginForm()}
-
-
-def image_form(request):
-    return {'image_form': forms.ImageForm()}

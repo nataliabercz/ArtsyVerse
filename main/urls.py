@@ -13,6 +13,8 @@ urlpatterns = [
 
     path('about/', about.get_about, name='about-get'),
     path('about/update', about.update_about, name='about-update'),
+    path('about/upload', about.upload_info_image, name='info-image-upload'),
+    path('about/delete/<int:image_id>', about.delete_info_image, name='info-image-delete'),
 
     path('', activities.get_activities, name='activities-get'),
     path('activity/add', activities.add_activity, name='activity-add'),

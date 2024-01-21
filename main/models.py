@@ -13,13 +13,13 @@ class BaseModel(models.Model):
 class Activity(BaseModel):
     name = models.CharField(max_length=50)
     type = models.CharField(max_length=8, choices=(('Activity', 'Activity'), ('Event', 'Event')))
-    image = models.ImageField(upload_to='gallery')
+    image = models.ImageField(upload_to='activities')
     description = models.TextField()
     date = models.DateField()
-    start_time = models.TimeField(blank=True)
-    end_time = models.TimeField(blank=True)
+    start_time = models.TimeField(blank=True, null=True)
+    end_time = models.TimeField(blank=True, null=True)
     location = models.CharField(max_length=50)
-    ticket_price = models.FloatField(blank=True)
+    ticket_price = models.FloatField(blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -31,9 +31,9 @@ class Activity(BaseModel):
 class Offer(BaseModel):
     category = models.CharField(max_length=20)
     type = models.CharField(max_length=10, choices=(('Individual', 'Individual'), ('Group', 'Group')), default=None)
-    single_class_price = models.FloatField(blank=True)
+    single_class_price = models.FloatField(blank=True, null=True)
     monthly_class_price = models.FloatField()
-    single_class_description = models.TextField(blank=True)
+    single_class_description = models.TextField(blank=True, null=True)
     monthly_class_description = models.TextField()
     image = models.ImageField(upload_to='classes')
 
@@ -61,8 +61,10 @@ class Assignment(BaseModel):
 class Class(BaseModel):
     offer = models.ForeignKey(Offer, on_delete=models.CASCADE)
     level = models.CharField(max_length=12, choices=(('Any', 'Any'), ('Beginner', 'Beginner'),
-                                                     ('Intermediate', 'Intermediate'), ('Advanced', 'Advanced')))
-    age_group = models.CharField(max_length=10, choices=(('Any', 'Any'), ('Youth', 'Youth'), ('Adults', 'Adults')))
+                                                     ('Intermediate', 'Intermediate'), ('Advanced', 'Advanced')),
+                             default=None)
+    age_group = models.CharField(max_length=10, choices=(('Any', 'Any'), ('Youth', 'Youth'), ('Adults', 'Adults')),
+                                 default=None)
     details = models.CharField(max_length=20, blank=True)
     day_name = models.CharField(max_length=9, choices=[(calendar.day_name[i], calendar.day_name[i]) for i in range(0, 5)])
     start_time = models.TimeField()
@@ -117,15 +119,21 @@ class CoachProfile(BaseModel):
         verbose_name_plural = 'Coach Profiles'
 
 
+class InfoImage(BaseModel):
+    image = models.ImageField(upload_to='info')
+
+
 class Info(BaseModel):
     school_name = models.CharField(max_length=30)
-    slogan = models.CharField(max_length=50, blank=True)
-    description = models.TextField()
     street = models.CharField(max_length=50)
     city = models.CharField(max_length=50)
     state = models.CharField(max_length=50)
     zipcode = models.CharField(max_length=10)
-    contact_people = models.ManyToManyField(CoachProfile)
+    contact_people = models.ManyToManyField(CoachProfile, blank=True)
+    slogan = models.CharField(max_length=80, blank=True)
+    logo = models.ImageField(upload_to='info')
+    favicon = models.ImageField(upload_to='info')
+    description = models.TextField()
 
     def __str__(self):
         return f'{self.school_name} {self.slogan}'
@@ -145,20 +153,18 @@ class StudentProfile(BaseModel):
         verbose_name_plural = 'Student Profiles'
 
 
-class Image(BaseModel):
+class GalleryImage(BaseModel):
     image = models.ImageField(upload_to='gallery')
 
 
-# class Absence(BaseModel):
-#     start_time = models.DateTimeField()
-#     end_time = models.DateTimeField()
-#     reason = models.Choices('Sick Leave', 'Other Absence')
-#     description = models.TextField(blank=True)
-#
-#     def __str__(self):
-#         return self.reason
-#
-#
+class Absence(BaseModel):
+    start = models.DateTimeField()
+    end = models.DateTimeField()
+    reason = models.CharField(max_length=10, choices=(('Sick Leave', 'Sick Leave'), ('Other', 'Other')), default=None)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.reason
 
 # class Setting(BaseModel):
 #     pass

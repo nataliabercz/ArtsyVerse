@@ -16,27 +16,30 @@ def get_messages(request, recipient_id=None):
     except:
         last_recipient = None
     grouped_messages = {}
-    sent_messages = models.UserProfile.objects.get(user_id=request.user.id).messages.all()
-    for message in models.Message.objects.all().order_by('-id'):
-        recipient = message.recipient
-        sender = models.UserProfile.objects.get(messages=message).user
-        for msg in sent_messages:
-            if message.id == msg.id:
-                grouped_messages.setdefault(recipient, {})
-                grouped_messages[recipient].setdefault('messages', []).append(message)
+    try:
+        sent_messages = models.UserProfile.objects.get(user_id=request.user.id).messages.all()
+        for message in models.Message.objects.all().order_by('-id'):
+            recipient = message.recipient
+            sender = models.UserProfile.objects.get(messages=message).user
+            for msg in sent_messages:
+                if message.id == msg.id:
+                    grouped_messages.setdefault(recipient, {})
+                    grouped_messages[recipient].setdefault('messages', []).append(message)
+                    if not last_recipient:
+                        last_recipient = recipient
+            if str(recipient) == str(request.user):
+                grouped_messages.setdefault(sender, {})
+                grouped_messages[sender].setdefault('messages', []).append(message)
+                if recipient_id == sender.id:
+                    models.Message.objects.filter(id=message.id).update(is_read=True)
+                if not message.is_read:
+                    grouped_messages[sender]['unread'] = grouped_messages[sender].get('unread', 0) + 1
                 if not last_recipient:
-                    last_recipient = recipient
-        if str(recipient) == str(request.user):
-            grouped_messages.setdefault(sender, {})
-            grouped_messages[sender].setdefault('messages', []).append(message)
-            if recipient_id == sender.id:
-                models.Message.objects.filter(id=message.id).update(is_read=True)
-            if not message.is_read:
-                grouped_messages[sender]['unread'] = grouped_messages[sender].get('unread', 0) + 1
-            if not last_recipient:
-                last_recipient = sender
-    for profile in models.UserProfile.objects.all():
-        grouped_messages.setdefault(profile.user, {})
+                    last_recipient = sender
+        for profile in models.UserProfile.objects.all():
+            grouped_messages.setdefault(profile.user, {})
+    except:
+        pass
     return render(request, HTML_TEMPLATE,
                   {'grouped_messages': grouped_messages, 'current_recipient': last_recipient,
                    'form_message_send': forms.MessageSendForm(initial={'recipient': last_recipient})})

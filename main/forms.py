@@ -13,19 +13,41 @@ class LoginForm(auth_forms.AuthenticationForm):
         super(LoginForm, self).__init__(*args, **kwargs)
 
 
-class AboutUpdateForm(forms.ModelForm):
+class InfoImageUploadForm(forms.ModelForm):
+    class Meta:
+        model = models.InfoImage
+        fields = '__all__'
+        labels = {'image': ''}
+
+
+class InfoInitialForm(forms.ModelForm):
     class Meta:
         model = models.Info
         fields = '__all__'
         labels = {'description': ''}
-        widgets = {'school_name': forms.HiddenInput(),
-                   'slogan': forms.HiddenInput(),
-                   'description': forms.Textarea(attrs={'placeholder': 'Description'}),
+        widgets = {'school_name': forms.TextInput(attrs={'placeholder': 'School Name'}),
+                   'street': forms.TextInput(attrs={'placeholder': 'Street'}),
+                   'city': forms.TextInput(attrs={'placeholder': 'City'}),
+                   'state': forms.TextInput(attrs={'placeholder': 'State'}),
+                   'zipcode': forms.TextInput(attrs={'placeholder': 'Zipcode'}),
+                   'contact_people': forms.MultipleHiddenInput(),
+                   'slogan': forms.TextInput(attrs={'placeholder': 'Slogan'}),
+                   'description': forms.Textarea(attrs={'placeholder': 'Description'})}
+
+
+class AboutUpdateForm(forms.ModelForm):
+    class Meta:
+        model = models.Info
+        fields = '__all__'
+        labels = {'school_name': '', 'slogan': '', 'description': ''}
+        widgets = {'school_name': forms.TextInput(attrs={'placeholder': 'School Name'}),
                    'street': forms.HiddenInput(),
                    'city': forms.HiddenInput(),
                    'state': forms.HiddenInput(),
                    'zipcode': forms.HiddenInput(),
-                   'contact_people': forms.MultipleHiddenInput()}
+                   'contact_people': forms.MultipleHiddenInput(),
+                   'slogan': forms.TextInput(attrs={'placeholder': 'Slogan'}),
+                   'description': forms.Textarea(attrs={'placeholder': 'Description'})}
 
 
 class ContactUpdateForm(forms.ModelForm):
@@ -34,18 +56,20 @@ class ContactUpdateForm(forms.ModelForm):
         fields = '__all__'
         labels = {'street': '', 'city': '', 'state': '', 'zipcode': '', 'contact_people': 'Contact People'}
         widgets = {'school_name': forms.HiddenInput(),
-                   'slogan': forms.HiddenInput(),
-                   'description': forms.HiddenInput(),
                    'street': forms.TextInput(attrs={'placeholder': 'Street'}),
                    'city': forms.TextInput(attrs={'placeholder': 'City'}),
                    'state': forms.TextInput(attrs={'placeholder': 'State'}),
-                   'zipcode': forms.TextInput(attrs={'placeholder': 'Zipcode'})}
+                   'zipcode': forms.TextInput(attrs={'placeholder': 'Zipcode'}),
+                   'slogan': forms.HiddenInput(),
+                   'logo': forms.HiddenInput(),
+                   'favicon': forms.HiddenInput(),
+                   'description': forms.HiddenInput()}
 
 
 class ActivityAddForm(forms.ModelForm):
     class Meta:
         model = models.Activity
-        fields = ['name', 'type', 'image', 'description', 'date']
+        fields = ['name', 'type', 'image', 'date', 'description']
         labels = {x: '' for x in fields}
         widgets = {'name': forms.TextInput(attrs={'placeholder': 'Name'}),
                    'type': forms.HiddenInput(attrs={'value': 'Activity'}),
@@ -56,7 +80,7 @@ class ActivityAddForm(forms.ModelForm):
 class ActivityUpdateForm(forms.ModelForm):
     class Meta:
         model = models.Activity
-        fields = ['name', 'image', 'description', 'date']
+        fields = ['name', 'image', 'date', 'description']
         labels = {x: '' for x in fields}
         widgets = {'name': forms.TextInput(attrs={'placeholder': 'Name'}),
                    'type': forms.HiddenInput(attrs={'value': 'Activity'}),
@@ -67,7 +91,7 @@ class ActivityUpdateForm(forms.ModelForm):
 class EventAddForm(forms.ModelForm):
     class Meta:
         model = models.Activity
-        fields = ['name', 'type', 'image', 'description', 'date', 'start_time', 'end_time', 'ticket_price', 'location']
+        fields = ['name', 'type', 'image', 'date', 'description', 'start_time', 'end_time', 'ticket_price', 'location']
         labels = {x: '' for x in fields}
         widgets = {'name': forms.TextInput(attrs={'placeholder': 'Name'}),
                    'type': forms.HiddenInput(attrs={'value': 'Event'}),
@@ -82,7 +106,7 @@ class EventAddForm(forms.ModelForm):
 class EventUpdateForm(forms.ModelForm):
     class Meta:
         model = models.Activity
-        fields = ['name', 'type', 'image', 'description', 'date', 'start_time', 'end_time', 'ticket_price', 'location']
+        fields = ['name', 'type', 'image', 'date', 'description', 'start_time', 'end_time', 'ticket_price', 'location']
         labels = {x: '' for x in fields}
         widgets = {'name': forms.TextInput(attrs={'placeholder': 'Name'}),
                    'type': forms.HiddenInput(attrs={'value': 'Event'}),
@@ -98,7 +122,7 @@ class UserAddForm(forms.ModelForm):
     class Meta:
         model = auth_models.User
         fields = '__all__'
-        labels = ({'first_name': '', 'last_name': '', 'email': ''})
+        labels = ({'first_name': '', 'last_name': '', 'email': '', 'is_superuser': 'School Owner'})
         widgets = {'first_name': forms.TextInput(attrs={'placeholder': 'First Name'}),
                    'last_name': forms.TextInput(attrs={'placeholder': 'Last Name'}),
                    'username': forms.HiddenInput(attrs={'value': 'tmp'}),
@@ -106,7 +130,6 @@ class UserAddForm(forms.ModelForm):
                    'password': forms.HiddenInput(attrs={'value': 'tmp'}),
                    'last_login': forms.HiddenInput(),
                    'user_permissions': forms.HiddenInput(),
-                   'is_superuser': forms.HiddenInput(attrs={'value': False}),
                    'is_staff': forms.HiddenInput(attrs={'value': False}),
                    'is_active': forms.HiddenInput(attrs={'value': True}),
                    'date_joined': forms.HiddenInput(),
@@ -210,9 +233,9 @@ class ClassUpdateForm(forms.ModelForm):
         fields = '__all__'
 
 
-class ImageForm(forms.ModelForm):
+class GalleryImageForm(forms.ModelForm):
     class Meta:
-        model = models.Image
+        model = models.GalleryImage
         fields = '__all__'
         labels = {'image': ''}
 
@@ -254,15 +277,15 @@ class AssignmentUpdateStudentForm(forms.ModelForm):
 class PasswordChangeForm(forms.Form):
     first_name = forms.CharField(label='First name',
                                  max_length=30,
-                                 widget=forms.TextInput(attrs={'class' : 'form-control'}),
+                                 widget=forms.TextInput(attrs={'class': 'form-control'}),
                                  required=False)
     last_name = forms.CharField(label='Last name',
                                 max_length=30,
-                                widget=forms.TextInput(attrs={'class' : 'form-control'}),
+                                widget=forms.TextInput(attrs={'class': 'form-control'}),
                                 required=False)
     background = forms.CharField(label='Background',
                                  max_length=500,
-                                 widget=forms.Textarea(attrs={'class' : 'form-control'}),
+                                 widget=forms.Textarea(attrs={'class': 'form-control'}),
                                  required=True)
 
 
@@ -304,3 +327,14 @@ class MessageSendForm(forms.ModelForm):
                     'datetime': forms.HiddenInput(attrs={'value': datetime.datetime.now()}),
                     'is_read': forms.HiddenInput(attrs={'value': False}),
                     'text': forms.TextInput(attrs={'placeholder': 'Type your message', 'rows': 1})})
+
+
+class AbsenceRequestForm(forms.ModelForm):
+    class Meta:
+        model = models.Absence
+        fields = '__all__'
+        labels = {'reason': '', 'description': ''}
+        widgets = ({'start': forms.DateTimeInput(format='%Y-%m-%dT%H:%M', attrs={'type': 'datetime-local'}),
+                    'end': forms.DateTimeInput(format='%Y-%m-%dT%H:%M', attrs={'type': 'datetime-local'}),
+                    'reason': forms.RadioSelect(),
+                    'description': forms.Textarea(attrs={'placeholder': 'Description'})})

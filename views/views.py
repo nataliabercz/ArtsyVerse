@@ -1,5 +1,5 @@
 from django.contrib import auth
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, Http404
 
 # Feedback -> Settings
 
@@ -11,6 +11,7 @@ def login_user(request):
         if user:
             auth.login(request, user)
             return redirect('/user')
+        raise Http404('BAD LOGIN')  # maybe modal and normal redirection
     return redirect(request.META.get('HTTP_REFERER'))
 
 

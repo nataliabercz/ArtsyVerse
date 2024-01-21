@@ -92,7 +92,7 @@ def get_grouped_users():
     if 'Coaches' not in [grp.name for grp in groups]:
         auth_models.Group.objects.create(name='Coaches')
     if 'Students' not in [grp.name for grp in groups]:
-        auth_models.Group.objects.create(name='Coaches')
+        auth_models.Group.objects.create(name='Students')
     users = {'Coaches': {'group_id': auth_models.Group.objects.get(name='Coaches').id,
                          'form_profile_add': forms.CoachProfileAddForm(),
                          'profiles': []},
@@ -101,21 +101,28 @@ def get_grouped_users():
                           'profiles': []}}
     for coach_profile in models.CoachProfile.objects.all():
         users['Coaches']['profiles'].append(
-            {'profile': coach_profile,
+            {'last_name': coach_profile.user.user.last_name,
+             'first_name': coach_profile.user.user.first_name,
+             'profile': coach_profile,
              'form_user_update': forms.UserUpdateForm(instance=coach_profile.user.user),
              'form_user_profile_update': forms.UserProfileUpdateForm(instance=coach_profile.user),
              'form_profile_update': forms.CoachProfileUpdateForm(instance=coach_profile)})
     for student_profile in models.StudentProfile.objects.all():
         users['Students']['profiles'].append(
-            {'profile': student_profile,
+            {'last_name': student_profile.user.user.last_name,
+             'first_name': student_profile.user.user.first_name,
+             'profile': student_profile,
              'form_user_update': forms.UserUpdateForm(instance=student_profile.user.user),
              'form_user_profile_update': forms.UserProfileUpdateForm(instance=student_profile.user)})
+    for item in ['Coaches', 'Students']:
+        users[item]['profiles'] = sorted(users[item]['profiles'], key=lambda x: (x['last_name'], x['first_name']))
     return users
 
 
 @login_required
 def get_classes(request):
-    return render(request, 'main/admin_page/classes.html', {'grouped_classes': get_grouped_classes(),
+    return render(request, 'main/admin_page/classes.html', {'offer': models.Offer.objects.all(),
+                                                            'grouped_classes': get_grouped_classes(),
                                                             'form_class_add': forms.ClassAddForm()})
 
 
@@ -126,4 +133,4 @@ def get_grouped_classes():
         classes_dict['form_class_update'] = forms.ClassUpdateForm(instance=cls)
         classes.setdefault(cls.offer.category, {})
         classes[cls.offer.category].setdefault(cls.offer.type, []).append(classes_dict)
-    return classes
+    return dict(sorted(classes.items()))

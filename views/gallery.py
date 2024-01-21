@@ -5,19 +5,19 @@ HTML_TEMPLATE = 'main/main_page/gallery.html'
 
 
 def get_gallery(request):
-    return render(request, HTML_TEMPLATE, {'images': models.Image.objects.all().order_by('-id'),
-                                           'form_image_add': forms.ImageForm()})
+    return render(request, HTML_TEMPLATE, {'images': models.GalleryImage.objects.all().order_by('-id'),
+                                           'form_gallery_image_upload': forms.GalleryImageForm()})
 
 
 def add_image(request):
     if request.method == 'POST':
-        form_image_add = forms.ImageForm(request.POST, request.FILES)
-        if form_image_add.is_valid():
-            form_image_add.save()
+        form_gallery_image_upload = forms.GalleryImageForm(request.POST, request.FILES)
+        if form_gallery_image_upload.is_valid():
+            form_gallery_image_upload.save()
     return redirect('/gallery')
 
 
 def delete_image(request, image_id):
     if request.method == 'POST':
-        get_object_or_404(models.Image, pk=image_id).delete()
+        get_object_or_404(models.GalleryImage, pk=image_id).delete()
     return redirect('/gallery')
