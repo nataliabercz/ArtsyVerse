@@ -53,7 +53,10 @@ urlpatterns = [
     path('user/admin/user/add/<int:group_id>', admin.add_user, name='user-add'),
     path('user/admin/user/update/<int:group_id>/<int:profile_id>', admin.update_user, name='user-update'),
     path('user/admin/user/delete/<int:group_id>/<int:profile_id>', admin.delete_user, name='user-delete'),
-    path('user/admin/classes', admin.get_classes, name='users-get'),
+    path('user/admin/classes', admin.get_classes, name='classes-get'),
+    path('user/admin/class/add', admin.add_class, name='class-add'),
+    path('user/admin/class/update/<int:class_id>', admin.update_class, name='class-update'),
+    path('user/admin/classes/delete/<int:class_id>', admin.delete_class, name='class-delete'),
 
     path('user/assignments/', assignments.get_assignments, name='assignments-get'),
     path('user/assignments/<int:class_id>', assignments.get_assignments, name='assignments-get'),
@@ -75,6 +78,7 @@ urlpatterns = [
     path('user/payments/pay', payments.pay_for_classes, name='payments-pay'),
 
     path('user/settings/', settings.get_settings, name='settings-get'),
+    path('user/settings/password/reset', settings.reset_password, name='settings-password-reset'),
     path('user/settings/password/update', settings.update_password, name='settings-password-update'),
     path('user/settings/font/update', settings.update_font, name='settings-font-update'),
     path('user/settings/chat-notifications/update', settings.update_chat_notifications,

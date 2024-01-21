@@ -26,7 +26,7 @@ def update_activity(request, activity_id):
             if is_event(request) else forms.ActivityUpdateForm(request.POST, request.FILES, instance=activity)
         if form_activity_update.is_valid():
             form_activity_update.save()
-    return redirect('/events' if is_event(request) else '/')
+    return redirect(f'/events#{activity_id}' if is_event(request) else f'/#{activity_id}')
 
 
 def delete_activity(request, activity_id):

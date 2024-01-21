@@ -13,6 +13,13 @@ class LoginForm(auth_forms.AuthenticationForm):
         super(LoginForm, self).__init__(*args, **kwargs)
 
 
+class PasswordResetForm(forms.Form):
+    email = forms.CharField(widget=forms.EmailInput(attrs={'placeholder': 'Personal Email'}), label='')
+
+    def __init__(self, *args, **kwargs):
+        super(PasswordResetForm, self).__init__(*args, **kwargs)
+
+
 class InfoImageUploadForm(forms.ModelForm):
     class Meta:
         model = models.InfoImage
@@ -30,6 +37,8 @@ class InfoInitialForm(forms.ModelForm):
                    'city': forms.TextInput(attrs={'placeholder': 'City'}),
                    'state': forms.TextInput(attrs={'placeholder': 'State'}),
                    'zipcode': forms.TextInput(attrs={'placeholder': 'Zipcode'}),
+                   'email': forms.TextInput(attrs={'placeholder': 'Email'}),
+                   'email_password': forms.TextInput(attrs={'placeholder': 'Email Password'}),
                    'contact_people': forms.MultipleHiddenInput(),
                    'slogan': forms.TextInput(attrs={'placeholder': 'Slogan'}),
                    'description': forms.Textarea(attrs={'placeholder': 'Description'})}
@@ -39,12 +48,14 @@ class AboutUpdateForm(forms.ModelForm):
     class Meta:
         model = models.Info
         fields = '__all__'
-        labels = {'school_name': '', 'slogan': '', 'description': ''}
+        labels = {'school_name': '', 'slogan': '', 'email': '', 'email_password': '', 'description': ''}
         widgets = {'school_name': forms.TextInput(attrs={'placeholder': 'School Name'}),
                    'street': forms.HiddenInput(),
                    'city': forms.HiddenInput(),
                    'state': forms.HiddenInput(),
                    'zipcode': forms.HiddenInput(),
+                   'email': forms.TextInput(attrs={'placeholder': 'Email'}),
+                   'email_password': forms.TextInput(attrs={'placeholder': 'Email Password'}),
                    'contact_people': forms.MultipleHiddenInput(),
                    'slogan': forms.TextInput(attrs={'placeholder': 'Slogan'}),
                    'description': forms.Textarea(attrs={'placeholder': 'Description'})}
@@ -57,14 +68,37 @@ class ContactUpdateForm(forms.ModelForm):
     class Meta:
         model = models.Info
         fields = '__all__'
-        labels = {'street': '', 'city': '', 'state': '', 'zipcode': '', 'contact_people': 'Contact People'}
+        labels = {'street': '', 'city': '', 'state': '', 'zipcode': ''}
         widgets = {'school_name': forms.HiddenInput(),
                    'street': forms.TextInput(attrs={'placeholder': 'Street'}),
                    'city': forms.TextInput(attrs={'placeholder': 'City'}),
                    'state': forms.TextInput(attrs={'placeholder': 'State'}),
                    'zipcode': forms.TextInput(attrs={'placeholder': 'Zipcode'}),
+                   'email': forms.HiddenInput(),
+                   'email_password': forms.HiddenInput(),
                    'slogan': forms.HiddenInput(),
-                   'description': forms.HiddenInput()}
+                   'description': forms.HiddenInput(),
+                   'contact_people': forms.MultipleHiddenInput()}
+
+
+class ContactPeopleUpdateForm(forms.ModelForm):
+    logo = forms.CharField(widget=forms.HiddenInput())
+    favicon = forms.CharField(widget=forms.HiddenInput())
+
+    class Meta:
+        model = models.Info
+        fields = '__all__'
+        labels = {'contact_people': ''}
+        widgets = {'school_name': forms.HiddenInput(),
+                   'street': forms.HiddenInput(),
+                   'city': forms.HiddenInput(),
+                   'state': forms.HiddenInput(),
+                   'zipcode': forms.HiddenInput(),
+                   'email': forms.HiddenInput(),
+                   'email_password': forms.HiddenInput(),
+                   'slogan': forms.HiddenInput(),
+                   'description': forms.HiddenInput(),
+                   'contact_people': forms.CheckboxSelectMultiple()}
 
 
 class ActivityAddForm(forms.ModelForm):
@@ -98,8 +132,8 @@ class EventAddForm(forms.ModelForm):
                    'type': forms.HiddenInput(attrs={'value': 'Event'}),
                    'date': forms.SelectDateWidget(),
                    'description': forms.Textarea(attrs={'placeholder': 'Description'}),
-                   'start_time': forms.TimeInput(attrs={'placeholder': 'Start Time'}),
-                   'end_time': forms.TimeInput(attrs={'placeholder': 'End Time'}),
+                   'start_time': forms.TimeInput(format='%H:%M', attrs={'type': 'time'}),
+                   'end_time': forms.TimeInput(format='%H:%M', attrs={'type': 'time'}),
                    'ticket_price': forms.NumberInput(attrs={'placeholder': 'Ticket Price'}),
                    'location': forms.TextInput(attrs={'placeholder': 'Location'})}
 
@@ -113,8 +147,8 @@ class EventUpdateForm(forms.ModelForm):
                    'type': forms.HiddenInput(attrs={'value': 'Event'}),
                    'date': forms.SelectDateWidget(),
                    'description': forms.Textarea(attrs={'placeholder': 'Description'}),
-                   'start_time': forms.TimeInput(attrs={'placeholder': 'Start Time'}),
-                   'end_time': forms.TimeInput(attrs={'placeholder': 'End Time'}),
+                   'start_time': forms.TimeInput(format='%H:%M', attrs={'type': 'time'}),
+                   'end_time': forms.TimeInput(format='%H:%M', attrs={'type': 'time'}),
                    'ticket_price': forms.NumberInput(attrs={'placeholder': 'Ticket Price'}),
                    'location': forms.TextInput(attrs={'placeholder': 'Location'})}
 
@@ -126,9 +160,9 @@ class UserAddForm(forms.ModelForm):
         labels = ({'first_name': '', 'last_name': '', 'email': '', 'is_superuser': 'School Owner'})
         widgets = {'first_name': forms.TextInput(attrs={'placeholder': 'First Name'}),
                    'last_name': forms.TextInput(attrs={'placeholder': 'Last Name'}),
-                   'username': forms.HiddenInput(attrs={'value': 'tmp'}),
-                   'email': forms.HiddenInput(attrs={'value': 'tmp@tmp.com'}),
-                   'password': forms.HiddenInput(attrs={'value': 'tmp'}),
+                   'username': forms.HiddenInput(attrs={'value': 'username'}),
+                   'email': forms.HiddenInput(attrs={'value': 'email@email.com'}),
+                   'password': forms.HiddenInput(attrs={'value': 'password'}),
                    'last_login': forms.HiddenInput(),
                    'user_permissions': forms.HiddenInput(),
                    'is_staff': forms.HiddenInput(attrs={'value': False}),
@@ -162,8 +196,9 @@ class UserProfileAddForm(forms.ModelForm):
     class Meta:
         model = models.UserProfile
         fields = '__all__'
-        labels = ({'street': '', 'city': '', 'state': '', 'zipcode': '', 'phone_number': ''})
+        labels = ({'personal_email': '', 'street': '', 'city': '', 'state': '', 'zipcode': '', 'phone_number': ''})
         widgets = {'user': forms.HiddenInput(),
+                   'personal_email': forms.EmailInput(attrs={'placeholder': 'Personal Email'}),
                    'street': forms.TextInput(attrs={'placeholder': 'Street'}),
                    'city': forms.TextInput(attrs={'placeholder': 'City'}),
                    'state': forms.TextInput(attrs={'placeholder': 'State'}),
@@ -176,8 +211,9 @@ class UserProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = models.UserProfile
         fields = '__all__'
-        labels = ({'street': '', 'city': '', 'state': '', 'zipcode': '', 'phone_number': ''})
+        labels = ({'personal_email': '', 'street': '', 'city': '', 'state': '', 'zipcode': '', 'phone_number': ''})
         widgets = {'user': forms.HiddenInput(),
+                   'personal_email': forms.EmailInput(attrs={'placeholder': 'Personal Email'}),
                    'street': forms.TextInput(attrs={'placeholder': 'Street'}),
                    'city': forms.TextInput(attrs={'placeholder': 'City'}),
                    'state': forms.TextInput(attrs={'placeholder': 'State'}),
@@ -207,24 +243,34 @@ class StudentProfileAddForm(forms.ModelForm):
     class Meta:
         model = models.StudentProfile
         fields = '__all__'
+        labels = {'account_number': ''}
         widgets = ({'user': forms.HiddenInput(),
-                    'balance': forms.HiddenInput(attrs={'value': 0})})
+                    'balance': forms.HiddenInput(attrs={'value': 0}),
+                    'account_number': forms.TextInput(attrs={'placeholder': 'Account Number'})})
+
+
+class StudentProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = models.StudentProfile
+        fields = ['account_number']
+        labels = {x: '' for x in fields}
+        widgets = ({'account_number': forms.TextInput(attrs={'placeholder': 'Account Number'})})
 
 
 class ClassAddForm(forms.ModelForm):
     class Meta:
         model = models.Class
         fields = '__all__'
-        labels = {'offer': '', 'age_group': 'Age Group', 'details': '', 'day_name': '', 'start_time': '',
-                  'end_time': '', 'location': ''}
-        widgets = {'offer': forms.RadioSelect(),
-                   'level': forms.RadioSelect(),
+        labels = {'age_group': 'Age Group', 'details': '', 'day_name': 'Day and Time',
+                  'start_time': '', 'end_time': '', 'location': ''}
+        widgets = {'level': forms.RadioSelect(),
                    'age_group': forms.RadioSelect(),
-                   'details': forms.TextInput(attrs={'placeholder': 'Details'}),
-                   'day_name': forms.DateInput(attrs={'placeholder': 'Day Name'}),  # only day
-                   'start_time': forms.TimeInput(attrs={'placeholder': 'Start Time'}),
-                   'end_time': forms.TimeInput(attrs={'placeholder': 'End Time'}),
+                   'day_name': forms.RadioSelect(),  # only day
+                   'start_time': forms.TimeInput(format='%H:%M', attrs={'type': 'time'}),
+                   'end_time': forms.TimeInput(format='%H:%M', attrs={'type': 'time'}),
                    'location': forms.TextInput(attrs={'placeholder': 'Location'}),
+                   'details': forms.TextInput(attrs={'placeholder': 'Additional Details'}),
+                   'users': forms.MultipleHiddenInput(),
                    'assignments': forms.MultipleHiddenInput()}
 
 
@@ -232,6 +278,35 @@ class ClassUpdateForm(forms.ModelForm):
     class Meta:
         model = models.Class
         fields = '__all__'
+        labels = {'age_group': 'Age Group', 'details': '', 'day_name': '',
+                  'start_time': '', 'end_time': '', 'location': ''}
+        widgets = {'offer': forms.HiddenInput(),
+                   'level': forms.HiddenInput(),
+                   'age_group': forms.HiddenInput(),
+                   'day_name': forms.RadioSelect(),
+                   'start_time': forms.TimeInput(format='%H:%M', attrs={'type': 'time'}),
+                   'end_time': forms.TimeInput(format='%H:%M', attrs={'type': 'time'}),
+                   'location': forms.TextInput(attrs={'placeholder': 'Location'}),
+                   'details': forms.TextInput(attrs={'placeholder': 'Additional Details'}),
+                   'users': forms.CheckboxSelectMultiple(),
+                   'assignments': forms.MultipleHiddenInput()}
+
+
+class ClassUsersUpdateForm(forms.ModelForm):
+    class Meta:
+        model = models.Class
+        fields = '__all__'
+        labels = {'users': ''}
+        widgets = {'offer': forms.HiddenInput(),
+                   'level': forms.HiddenInput(),
+                   'age_group': forms.HiddenInput(),
+                   'day_name': forms.RadioSelect(),
+                   'start_time': forms.HiddenInput(),
+                   'end_time': forms.HiddenInput(),
+                   'location': forms.HiddenInput(),
+                   'details': forms.HiddenInput(),
+                   'users': forms.CheckboxSelectMultiple(),
+                   'assignments': forms.MultipleHiddenInput()}
 
 
 class GalleryImageForm(forms.ModelForm):
@@ -273,21 +348,6 @@ class AssignmentUpdateStudentForm(forms.ModelForm):
                    'skill_degree': forms.HiddenInput(),
                    'student_notes': forms.Textarea(attrs={'placeholder': 'Notes'}),
                    'offer': forms.HiddenInput()}
-
-
-class PasswordChangeForm(forms.Form):
-    first_name = forms.CharField(label='First name',
-                                 max_length=30,
-                                 widget=forms.TextInput(attrs={'class': 'form-control'}),
-                                 required=False)
-    last_name = forms.CharField(label='Last name',
-                                max_length=30,
-                                widget=forms.TextInput(attrs={'class': 'form-control'}),
-                                required=False)
-    background = forms.CharField(label='Background',
-                                 max_length=500,
-                                 widget=forms.Textarea(attrs={'class': 'form-control'}),
-                                 required=True)
 
 
 class OfferAddForm(forms.ModelForm):
@@ -339,3 +399,25 @@ class AbsenceRequestForm(forms.ModelForm):
                     'end': forms.DateTimeInput(format='%Y-%m-%dT%H:%M', attrs={'type': 'datetime-local'}),
                     'reason': forms.RadioSelect(),
                     'description': forms.Textarea(attrs={'placeholder': 'Description'})})
+
+
+class EmailUpdateForm(forms.Form):
+    email = forms.CharField(widget=forms.EmailInput(attrs={'placeholder': 'New Email'}), label='')
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Provide Password'}), label='')
+
+    def __init__(self, *args, **kwargs):
+        super(EmailUpdateForm, self).__init__(*args, **kwargs)
+
+
+class PasswordUpdateForm(forms.Form):
+    old_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Old Password'}), label='')
+    new_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'New Password'}), label='')
+    repeated_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Repeat Password'}), label='')
+
+    def __init__(self, *args, **kwargs):
+        super(PasswordUpdateForm, self).__init__(*args, **kwargs)
+
+    # def validate_project_name(value):
+    #     if new_password != repeated_password:
+    #         raise ValidationError('This already exists not exist.')
+    #     return value

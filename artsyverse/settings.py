@@ -43,7 +43,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'main.context_processors.set_navbar',
-                'main.context_processors.login_form'
+                'main.context_processors.login_form',
+                'main.context_processors.password_reset_form'
             ],
         },
     },

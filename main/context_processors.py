@@ -37,3 +37,7 @@ def set_navbar(request):
 
 def login_form(request):
     return {'login_form': forms.LoginForm()}
+
+
+def password_reset_form(request):
+    return {'password_reset_form': forms.PasswordResetForm()}

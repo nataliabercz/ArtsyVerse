@@ -50,8 +50,8 @@ class Assignment(BaseModel):
                                                             ('In Progress', 'In Progress'),
                                                             ('Ready To Perform', 'Ready to Perform'),
                                                             ('Obsolete', 'Obsolete')), default=None)
-    coach_notes = models.TextField(blank=True)
-    student_notes = models.TextField(blank=True)
+    coach_notes = models.TextField(blank=True, null=True)
+    student_notes = models.TextField(blank=True, null=True)
     offer = models.ForeignKey(Offer, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -65,13 +65,14 @@ class Class(BaseModel):
                              default=None)
     age_group = models.CharField(max_length=10, choices=(('Any', 'Any'), ('Youth', 'Youth'), ('Adults', 'Adults')),
                                  default=None)
-    details = models.CharField(max_length=20, blank=True)
-    day_name = models.CharField(max_length=9, choices=[(calendar.day_name[i], calendar.day_name[i]) for i in range(0, 5)])
+    day_name = models.CharField(max_length=9, choices=[(calendar.day_name[i],
+                                                        calendar.day_name[i]) for i in range(0, 5)], default=None)
     start_time = models.TimeField()
     end_time = models.TimeField()
     location = models.CharField(max_length=20)
-    users = models.ManyToManyField(auth_models.User, blank=True)
-    assignments = models.ManyToManyField(Assignment, blank=True)
+    details = models.CharField(max_length=20, blank=True, null=True)
+    users = models.ManyToManyField(auth_models.User, blank=True, null=True)
+    assignments = models.ManyToManyField(Assignment, blank=True, null=True)
 
     def __str__(self):
         return f'{self.offer.category} - {self.offer.type} - {self.level} - ' \
@@ -93,12 +94,13 @@ class Message(BaseModel):
 
 class UserProfile(BaseModel):
     user = models.OneToOneField(auth_models.User, on_delete=models.CASCADE)
+    personal_email = models.EmailField()
     street = models.CharField(max_length=30)
     city = models.CharField(max_length=15)
     state = models.CharField(max_length=15)
     zipcode = models.CharField(max_length=5)
     phone_number = models.CharField(max_length=12)
-    messages = models.ManyToManyField(Message, blank=True)
+    messages = models.ManyToManyField(Message, blank=True, null=True)
 
     def __str__(self):
         return f'{self.user.username}'
@@ -129,10 +131,12 @@ class Info(BaseModel):
     city = models.CharField(max_length=50)
     state = models.CharField(max_length=50)
     zipcode = models.CharField(max_length=10)
-    contact_people = models.ManyToManyField(CoachProfile, blank=True)
-    slogan = models.CharField(max_length=80, blank=True)
+    email = models.EmailField()
+    email_password = models.CharField(max_length=20)
+    contact_people = models.ManyToManyField(CoachProfile, blank=True, null=True)
+    slogan = models.CharField(max_length=80, blank=True, null=True)
     logo = models.ImageField(upload_to='info')
-    favicon = models.ImageField(upload_to='info')
+    favicon = models.ImageField(upload_to='icons')
     description = models.TextField()
 
     def __str__(self):
@@ -142,9 +146,16 @@ class Info(BaseModel):
         verbose_name_plural = 'Info'
 
 
+# class BankInfo(BaseModel):
+#     name = ''
+#     address = ''
+#     payment_infos = ''
+
+
 class StudentProfile(BaseModel):
     user = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
     balance = models.FloatField()
+    account_number = models.CharField(max_length=12)
 
     def __str__(self):
         return f'{self.user.user.username}'
@@ -161,7 +172,7 @@ class Absence(BaseModel):
     start = models.DateTimeField()
     end = models.DateTimeField()
     reason = models.CharField(max_length=10, choices=(('Sick Leave', 'Sick Leave'), ('Other', 'Other')), default=None)
-    description = models.TextField(blank=True)
+    description = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.reason

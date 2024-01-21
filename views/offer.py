@@ -21,7 +21,7 @@ def update_offer(request, offer_id):
                                                   instance=models.Offer.objects.get(id=offer_id))
         if form_offer_update.is_valid():
             form_offer_update.save()
-    return redirect('/offer')
+    return redirect(f'/offer#{offer_id}')
 
 
 def delete_offer(request, offer_id):

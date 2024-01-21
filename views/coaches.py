@@ -14,7 +14,7 @@ def update_coach(request, coach_id):
                                                          instance=models.CoachProfile.objects.get(id=coach_id))
         if form_coach_update.is_valid():
             form_coach_update.save()
-    return redirect('/coaches')
+    return redirect(f'/coaches#{coach_id}')
 
 
 def delete_coach(request, coach_id):
@@ -33,7 +33,7 @@ def get_grouped_coaches(request):
         coach_dict.setdefault('classes', [])
         for cls in models.Class.objects.all():
             if str(coach) in [str(user) for user in cls.users.all()]:
-                coach_dict['classes'].append(f'{cls.offer.category} lessons')
+                coach_dict['classes'].append(cls.offer.category)
         coach_dict['classes'] = set(coach_dict['classes'])
         coaches.append(coach_dict)
     return sorted(coaches, key=lambda x: x['name'])

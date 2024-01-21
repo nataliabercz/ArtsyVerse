@@ -10,6 +10,7 @@ HTML_TEMPLATE = 'main/user_page/messages.html'
 
 @login_required
 def get_messages(request, recipient_id=None):
+    # if messages written in less than 10 minutes - keep them together
     get_conversations(request)
     try:
         last_recipient = auth_models.User.objects.get(id=recipient_id)

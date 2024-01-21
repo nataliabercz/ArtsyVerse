@@ -50,6 +50,8 @@ def get_upcoming_classes(request):
                                     'user': user,
                                     'user_id': user_id,
                                     'class_id': cls.id})
+                else:
+                    print(cls.offer.category)
             else:
                 next_week.append({'name': cls.offer.category,
                                   'type': cls.offer.type,
@@ -62,6 +64,6 @@ def get_upcoming_classes(request):
                                   'user': user,
                                   'user_id': user_id,
                                   'class_id': cls.id})
-    classes = sorted(classes, key=lambda x: (x['day_id'], x['start_time']))
-    next_week = sorted(next_week, key=lambda x: (x['day_id'], x['start_time']))
+    # classes = sorted(classes, key=lambda x: (x['day_id'], x['start_time']))
+    # next_week = sorted(next_week, key=lambda x: (x['day_id'], x['start_time']))
     return render(request, HTML_TEMPLATE, {'classes': classes + next_week})
