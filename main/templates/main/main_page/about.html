@@ -57,7 +57,7 @@
                 {% if user.is_superuser %}
                 <button type="button" class="btn-close btn-close-white btn-danger float-end" data-bs-toggle="modal" data-bs-target="#delete{{ image.id }}"></button>
                 {% endif %}
-                <img class="rounded" src="{{ image.image.url }}" alt height=230>
+                <img class="rounded mb-2" src="{{ image.image.url }}" alt height=230>
             </div>
             <div class="modal fade" id="delete{{ image.id }}" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">

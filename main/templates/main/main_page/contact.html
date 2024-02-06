@@ -3,30 +3,45 @@
 {% load crispy_forms_tags %}
 <html>
 {% block content %}
-<style>
-.asteriskField {
-    display: none;
-}
-</style>
 <div class="container">
     {% if user.is_superuser %}
     {% if not contact_data %}
-    <button type="button" class="d-flex btn btn-info px-4 mb-4" data-bs-toggle="modal" data-bs-target="#updateContact">Add School Data</button>
+    <button type="button" class="btn btn-info px-4 mb-4" data-bs-toggle="modal" data-bs-target="#updateAddress">Add School Data</button>
     {% else %}
-    <button type="button" class="d-flex btn btn-info px-4 mb-4" data-bs-toggle="modal" data-bs-target="#updateContact">Update Contact Data</button>
+    <button type="button" class="btn btn-info px-4 mb-4" data-bs-toggle="modal" data-bs-target="#updateAddress">Update Address Data</button>
+    <button type="button" class="btn btn-info px-4 mb-4" data-bs-toggle="modal" data-bs-target="#updateContact">Update Contact People</button>
     {% endif %}
     {% endif %}
-    <div class="modal fade" id="updateContact" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="updateAddress" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Update Contact Data</h5>
+                    <h5 class="modal-title">Update Address Data</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form method="post" action="/contact/update" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="modal-body text-start">
-                        {{ contact_data.form_contact_update|crispy }}
+                        {{ form_contact_update|crispy }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-info">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="updateContact" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Update Contact People</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" action="/contact/update" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-body text-start">
+                        {{ form_contact_people_update|crispy }}
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-info">Submit</button>
@@ -86,6 +101,7 @@
             </p>
         </div>
         {% endfor %}
+        <br>
         {% endif %}
     </div>
 </div>

@@ -3,21 +3,9 @@
 {% load crispy_forms_tags %}
 <html>
 {% block content %}
-<style>
-.accordion-button:focus {
-  z-index: 1;
-  box-shadow: 0 0 0 .05rem #FFF !important;
-}
-.accordion-button:not(.collapsed) {
-  background-color: #3E4449 !important;
-}
-.accordion-button:after {
-  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
-}
-</style>
 <div class="container">
     {% if user.is_superuser %}
-    <button type="button" class="d-flex btn btn-info px-4" data-bs-toggle="modal" data-bs-target="#addOffer">Add</button>
+    <button type="button" class="d-flex btn btn-info px-4" data-bs-toggle="modal" data-bs-target="#addOffer">Add Offer</button>
     {% endif %}
     <div class="modal fade" id="addOffer" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
@@ -52,7 +40,6 @@
                     {% if user.is_superuser %}
                     <button type="button" class="btn btn-info px-4" data-bs-toggle="modal" data-bs-target="#update{{ item.id }}">Update</button>
                     <button type="button" class="btn btn-danger px-4" data-bs-toggle="modal" data-bs-target="#delete{{ item.id }}">Delete</button>
-                    {% endif %}
                     <div class="modal fade" id="update{{ item.id }}" tabindex="-1" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -91,7 +78,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row justify-content-md-center text-center mt-4 mb-4">
+                    {% endif %}
+                    <div class="row justify-content-md-center text-center mt-4 mb-4" id="{{ item.id }}">
                         {% if item.type == 'Individual' %}
                         <div class="col col-lg-5">
                             <div class="card border-0">

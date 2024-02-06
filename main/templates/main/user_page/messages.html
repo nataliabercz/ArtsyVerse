@@ -20,7 +20,7 @@
 }
 </style>
 <div class="container">
-    {% if user.is_superuser and not user.groups.all.0|slugify == 'coaches' or not user.groups.all.0|slugify == 'students' %}
+    {% if user.is_superuser and not user.groups.all.0|slugify == 'coaches' and not user.groups.all.0|slugify == 'students' %}
     ADMIN THAT IS NOT COACH CAN'T SEND MESSAGES
     {% else %}
     <div class="card border-0">

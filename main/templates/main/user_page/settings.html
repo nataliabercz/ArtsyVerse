@@ -4,12 +4,34 @@
 <html>
 {% block content %}
 <div class="container">
-    <!--    <a class="btn btn-secondary mb-2" href="/password_change">Change Password</a>-->
+<!--    report problem-->
+    <button type="button" class="d-flex btn btn-secondary mb-2" data-bs-toggle="modal" data-bs-target="#emailModal">Update Personal Email</button>
     <button type="button" class="d-flex btn btn-secondary mb-2" data-bs-toggle="modal" data-bs-target="#passwordModal">Change Password</button>
-    <button type="button" class="d-flex btn btn-secondary mb-2" data-bs-toggle="modal" data-bs-target="#passwordModal">Change Font</button>
-    <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
-        <label class="form-check-label" for="flexSwitchCheckChecked">Chat Notifications</label>
+    <!--    <button type="button" class="d-flex btn btn-secondary mb-2" data-bs-toggle="modal" data-bs-target="#passwordModal">Change Font</button>-->
+    <!--    <div class="form-check form-switch">-->
+    <!--        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>-->
+    <!--        <label class="form-check-label" for="flexSwitchCheckChecked">Chat Notifications</label>-->
+    <!--    </div>-->
+    <div class="modal fade" id="emailModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Update Personal Email</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" action="/user/settings/email/update">
+                    {% csrf_token %}
+                    <div class="modal-body text-start">
+                        <div class="mb-3">
+                            {{ form_update_email|crispy }}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-info">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
     <div class="modal fade" id="passwordModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
@@ -18,11 +40,11 @@
                     <h5 class="modal-title">Change Password</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="post" action="/password/update">
+                <form method="post" action="/user/settings/password/update">
                     {% csrf_token %}
                     <div class="modal-body text-start">
                         <div class="mb-3">
-                            {{ form_change_password|crispy }}
+                            {{ form_update_password|crispy }}
                         </div>
                     </div>
                     <div class="modal-footer">

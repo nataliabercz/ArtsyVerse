@@ -38,7 +38,7 @@
         {% for type, activity in activities.items %}
         {% if type == activity_type %}
         {% for item in activity %}
-        <div class="card-header border-bottom border-secondary bg-dark text-center mt-4">
+        <div class="card-header border-bottom border-secondary bg-dark text-center mt-4" id="{{ item.id }}">
             <b>{{ item.name }}</b>
         </div>
         <div class="card-body">

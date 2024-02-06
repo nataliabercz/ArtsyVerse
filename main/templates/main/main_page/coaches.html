@@ -6,7 +6,7 @@
 <div class="container">
     <div class="card border-0">
         {% for coach in coaches %}
-        <div class="card-header border-bottom border-secondary bg-dark text-center mt-4">
+        <div class="card-header border-bottom border-secondary bg-dark text-center mt-4" id="{{ coach.id }}">
             <b>{{ coach.name }}</b>
         </div>
         <div class="card-body">
@@ -15,12 +15,12 @@
                     <img class="rounded" src="{{ coach.image.url }}" alt height=250>
                 </div>
                 <div class="col">
-                    <p>{{ coach.description }}</p>
-                    {% for class in coach.classes %}
+                    <p>{{ coach.description|safe }}</p>
                     <ul>
+                        {% for class in coach.classes %}
                         <li>{{ class }}</li>
+                        {% endfor %}
                     </ul>
-                    {% endfor %}
                 </div>
             </div>
             {% if user.is_superuser%}

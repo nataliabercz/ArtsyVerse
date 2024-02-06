@@ -25,17 +25,17 @@
     </div><br>
     <div class="card-header border-bottom border-secondary text-center mt-4">
         <b>Payment Data</b>
-        <br>account number, etc.
     </div>
     <div class="card-body">
-        <p class="card-text"><b>{{ contact_data.main_contact.user.user.first_name }} {{ contact_data.main_contact.user.user.last_name }}</b></p>
         <p class="card-text">
-            <img class="rounded" src="/media/email.png" alt width="40">&nbsp;&nbsp;
-            {{ contact_data.main_contact.user.user.email }}
-        </p>
-        <p class="card-text">
-            <img class="rounded" src="/media/phone.png" alt width="40">&nbsp;&nbsp;
-            {{ contact_data.main_contact.user.phone_number }}
+            <p>
+                <img class="rounded" src="/media/icons/bank.png" alt width="60">&nbsp;&nbsp;
+                &nbsp;&nbsp;<b>Royal Crown Bank</b>&nbsp;&nbsp;&nbsp;&nbsp;894 West Side Avenue&nbsp;&nbsp;&nbsp;&nbsp;Rochelle Park&nbsp;&nbsp;&nbsp;&nbsp;New Jersey&nbsp;&nbsp;&nbsp;&nbsp;07662
+            </p>
+            <p>
+                <img class="rounded" src="/media/icons/account.png" alt width="60">&nbsp;&nbsp;
+                &nbsp;&nbsp;<b>{{ account_number }}</b>
+            </p>
         </p>
     </div>
 </div>
