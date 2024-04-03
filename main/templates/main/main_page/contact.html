@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 {% extends 'main/base.html' %}
 {% load crispy_forms_tags %}
+{% load define_action %}
 <html>
 {% block content %}
 <div class="container">
-    {% if user.is_superuser %}
     {% if not contact_data %}
-    <button type="button" class="btn btn-info px-4 mb-4" data-bs-toggle="modal" data-bs-target="#updateAddress">Add School Data</button>
+    {% define "Add" as action %}
     {% else %}
-    <button type="button" class="btn btn-info px-4 mb-4" data-bs-toggle="modal" data-bs-target="#updateAddress">Update Address Data</button>
+    {% define "Update" as action %}
+    {% endif %}
+    {% if user.is_superuser %}
+    <button type="button" class="btn btn-info px-4 mb-4" data-bs-toggle="modal" data-bs-target="#updateAddress">{{ action }} Address Data</button>
+    {% if contact_data %}
     <button type="button" class="btn btn-info px-4 mb-4" data-bs-toggle="modal" data-bs-target="#updateContact">Update Contact People</button>
     {% endif %}
     {% endif %}
@@ -16,7 +20,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Update Address Data</h5>
+                    <h5 class="modal-title">{{ action }} Address Data</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form method="post" action="/contact/update" enctype="multipart/form-data">

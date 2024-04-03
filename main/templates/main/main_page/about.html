@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 {% extends 'main/base.html' %}
 {% load crispy_forms_tags %}
+{% load define_action %}
 <html>
 {% block content %}
 <div class="container">
+    {% if not info %}
+    {% define "Add" as action %}
+    {% else %}
+    {% define "Update" as action %}
+    {% endif %}
     {% if user.is_superuser %}
     <button type="button" class="btn btn-info px-4 ms-1" data-bs-toggle="modal" data-bs-target="#updateImages">Upload Image</button>
-    {% if not info %}
-    <button type="button" class="btn btn-info px-4" data-bs-toggle="modal" data-bs-target="#updateInfo">Add School Data</button>
-    {% else %}
-    <button type="button" class="btn btn-info px-4" data-bs-toggle="modal" data-bs-target="#updateInfo">Update School Data</button>
-    {% endif %}
+    <button type="button" class="btn btn-info px-4" data-bs-toggle="modal" data-bs-target="#updateInfo">{{ action }} School Data</button>
     {% endif %}
     <div class="modal fade" id="updateImages" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
@@ -35,7 +37,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Update School Data</h5>
+                    <h5 class="modal-title">{{ action }} School Data</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form method="post" action="/about/update" enctype="multipart/form-data">
