@@ -131,7 +131,7 @@ class Info(BaseModel):
     city = models.CharField(max_length=50)
     state = models.CharField(max_length=50)
     zipcode = models.CharField(max_length=10)
-    domain = models.CharField()
+    domain = models.CharField(max_length=50)
     email = models.EmailField()
     email_password = models.CharField(max_length=20)
     contact_people = models.ManyToManyField(CoachProfile, blank=True)
