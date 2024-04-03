@@ -28,34 +28,37 @@ class InfoImageUploadForm(forms.ModelForm):
 
 
 class InfoInitialForm(forms.ModelForm):
+    email_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Email Password'}), label='')
+
     class Meta:
         model = models.Info
         fields = '__all__'
-        labels = {'description': ''}
+        labels = {'school_name': '', 'street': '', 'city': '', 'state': '', 'zipcode': '', 'email': '', 'slogan': '',
+                  'description': ''}
         widgets = {'school_name': forms.TextInput(attrs={'placeholder': 'School Name'}),
                    'street': forms.TextInput(attrs={'placeholder': 'Street'}),
                    'city': forms.TextInput(attrs={'placeholder': 'City'}),
                    'state': forms.TextInput(attrs={'placeholder': 'State'}),
                    'zipcode': forms.TextInput(attrs={'placeholder': 'Zipcode'}),
                    'email': forms.TextInput(attrs={'placeholder': 'Email'}),
-                   'email_password': forms.TextInput(attrs={'placeholder': 'Email Password'}),
                    'contact_people': forms.MultipleHiddenInput(),
                    'slogan': forms.TextInput(attrs={'placeholder': 'Slogan'}),
                    'description': forms.Textarea(attrs={'placeholder': 'Description'})}
 
 
 class AboutUpdateForm(forms.ModelForm):
+    email_password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Email Password'}), label='')
+
     class Meta:
         model = models.Info
         fields = '__all__'
-        labels = {'school_name': '', 'slogan': '', 'email': '', 'email_password': '', 'description': ''}
+        labels = {'school_name': '', 'slogan': '', 'email': '', 'description': ''}
         widgets = {'school_name': forms.TextInput(attrs={'placeholder': 'School Name'}),
                    'street': forms.HiddenInput(),
                    'city': forms.HiddenInput(),
                    'state': forms.HiddenInput(),
                    'zipcode': forms.HiddenInput(),
                    'email': forms.TextInput(attrs={'placeholder': 'Email'}),
-                   'email_password': forms.TextInput(attrs={'placeholder': 'Email Password'}),
                    'contact_people': forms.MultipleHiddenInput(),
                    'slogan': forms.TextInput(attrs={'placeholder': 'Slogan'}),
                    'description': forms.Textarea(attrs={'placeholder': 'Description'})}

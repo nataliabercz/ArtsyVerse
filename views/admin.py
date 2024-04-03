@@ -79,6 +79,7 @@ def update_user(request, group_id, profile_id):
             else:
                 group = 'student'
             user.username = f'{user.first_name.lower()}.{user.last_name.lower()}@{group}.artsyverse.com'
+            # TODO
             user.email = user.username
             user.save()
             form_user_update.save()

@@ -24,7 +24,7 @@ urlpatterns = [
     path('event/add', activities.add_activity, name='event-add'),
     path('event/update/<int:activity_id>', activities.update_activity, name='event-update'),
     path('event/delete/<int:activity_id>', activities.delete_activity, name='event-delete'),
-    # path('event/ticket/buy/<int:activity_id>', activities.buy_ticket, name='event-ticket-buy'),  # only coaches
+    # TODO path('event/ticket/buy/<int:activity_id>', activities.buy_ticket, name='event-ticket-buy'),
 
     path('coaches/', coaches.get_coaches, name='coaches-get'),
     path('coach/update/<int:coach_id>', coaches.update_coach, name='coach-update'),
@@ -41,13 +41,13 @@ urlpatterns = [
     path('offer/add', offer.add_offer, name='offer-add'),
     path('offer/update/<int:offer_id>', offer.update_offer, name='offer-update'),
     path('offer/delete/<int:offer_id>', offer.delete_offer, name='offer-delete'),
-    path('offer/sign_in', offer.sign_in, name='offer-sign-in'),  # only not logged in and students
+    path('offer/sign_in', offer.sign_in, name='offer-sign-in'),
 
     path('user/', upcoming_classes.get_upcoming_classes, name='upcoming-classes-get'),
 
-    path('user/absences', absences.get_absences, name='absences-get'),  # only coaches
-    path('user/absence/request', absences.request_absence, name='absence-request'),  # only coaches
-    # path('user/absence/request/<id>/cancel', views.absence_cancel_request, name='absence-cancel-request'),  # only coaches
+    path('user/absences', absences.get_absences, name='absences-get'),
+    path('user/absence/request', absences.request_absence, name='absence-request'),
+    # TODO path('user/absence/request/<id>/cancel', views.absence_cancel_request, name='absence-cancel-request'),
 
     path('user/admin/users', admin.get_users, name='users-get'),
     path('user/admin/user/add/<int:group_id>', admin.add_user, name='user-add'),
@@ -66,7 +66,7 @@ urlpatterns = [
 
     path('user/calendar/', calendar.get_calendar, name='calendar-get'),
     path('user/calendar/events', calendar.get_calendar_events, name='calendar-get-events'),
-    # path('user/calendar/reschedule/<int:class_id>', calendar.reschedule_class, name='class-reschedule'),
+    # TODO path('user/calendar/reschedule/<int:class_id>', calendar.reschedule_class, name='class-reschedule'),
 
     path('user/messages/', messages.get_messages, name='messages-get'),
     path('user/messages/<int:recipient_id>', messages.get_messages, name='messages-get'),

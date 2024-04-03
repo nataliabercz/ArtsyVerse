@@ -71,8 +71,8 @@ class Class(BaseModel):
     end_time = models.TimeField()
     location = models.CharField(max_length=20)
     details = models.CharField(max_length=20, blank=True, null=True)
-    users = models.ManyToManyField(auth_models.User, blank=True, null=True)
-    assignments = models.ManyToManyField(Assignment, blank=True, null=True)
+    users = models.ManyToManyField(auth_models.User, blank=True)
+    assignments = models.ManyToManyField(Assignment, blank=True)
 
     def __str__(self):
         return f'{self.offer.category} - {self.offer.type} - {self.level} - ' \
@@ -100,7 +100,7 @@ class UserProfile(BaseModel):
     state = models.CharField(max_length=15)
     zipcode = models.CharField(max_length=5)
     phone_number = models.CharField(max_length=12)
-    messages = models.ManyToManyField(Message, blank=True, null=True)
+    messages = models.ManyToManyField(Message, blank=True)
 
     def __str__(self):
         return f'{self.user.username}'
@@ -131,9 +131,10 @@ class Info(BaseModel):
     city = models.CharField(max_length=50)
     state = models.CharField(max_length=50)
     zipcode = models.CharField(max_length=10)
+    domain = models.CharField()
     email = models.EmailField()
     email_password = models.CharField(max_length=20)
-    contact_people = models.ManyToManyField(CoachProfile, blank=True, null=True)
+    contact_people = models.ManyToManyField(CoachProfile, blank=True)
     slogan = models.CharField(max_length=80, blank=True, null=True)
     logo = models.ImageField(upload_to='info')
     favicon = models.ImageField(upload_to='icons')
@@ -149,7 +150,7 @@ class Info(BaseModel):
 # class BankInfo(BaseModel):
 #     name = ''
 #     address = ''
-#     payment_infos = ''
+#     payment_info = ''
 
 
 class StudentProfile(BaseModel):

@@ -6,7 +6,6 @@ STUDENT_NAVBAR = {'Assignments': '/user/assignments', 'Messages': '/user/message
                   'Payments': '/user/payments', 'Settings': '/user/settings'}
 COACH_NAVBAR = {'Messages': '/user/messages', 'Calendar': '/user/calendar', 'Absences': '/user/absences',
                 'Settings': '/user/settings'}
-COACH_DOMAIN = 'coach.artsyverse.com'
 
 
 def set_navbar(request):
@@ -25,8 +24,8 @@ def set_navbar(request):
         school_data['favicon'] = f'/media/icons/favicon_example.ico'
     # maybe some regex here
     if '/user' in str(request) or '/login' in str(request) and str(request.user) != 'AnonymousUser':
-        if COACH_DOMAIN in str(request.user) or request.user.is_superuser:
-            # request.user.group == 'Coaches'
+        if 'coach.artsyverse.com' in str(request.user) or request.user.is_superuser:
+            # TODO request.user.group == 'Coaches'
             navbar = COACH_NAVBAR
         else:
             navbar = STUDENT_NAVBAR
