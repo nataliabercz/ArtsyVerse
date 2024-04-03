@@ -1,216 +1,245 @@
 # ArtsyVerse
 
+ArtsyVerse is an Artistic School Management System. This application was created to allow
+
+## Creating Superuser
+
+<img src="./images/superuser_create.png" width="800">
+
+## Running Application
+
+<img src="./images/server_run.png" width="800">
+
 ### Authentication
 
-###### login button
+<img src="./images/navbar.png" width="800">
 
 #### Logging in
 
-<img src="./images/log_in.png" width="300">
+<img src="./images/log_in_empty.png" height="250">
+<img src="./images/log_in_example.png" height="250">
 
 #### Resetting Password
 
 <img src="./images/password_reset.png" width="300">
 
-### About
+## About
 
 <img src="./images/about.png">
 
-#### First Login
+### First Login
 
 <img src="./images/about_first_login.png" width="800">
 
-#### Adding School Data
-
-###### add school data
-
-#### Automatic Logo, Title, and Slogan
+#### Logo and Slogan
 
 <img src="./images/title_example.png" width="200">
 <img src="./images/title.png" width="200">
 
+#### Adding School Data
+
+<img src="./images/school_data_add.png" width="800">
+
 #### Updating School Data
 
-<img src="./images/about_update_school_data.png" width="800">
+<img src="./images/school_data_update.png" width="800">
 
 #### Uploading Images
 
-<img src="./images/about_image_upload.png" width="800">
+<img src="./images/image_upload.png" width="800">
 
 #### Deleting Images
 
 <img src="./images/image_delete.png" width="300">
 
-### Activities
+## Activities
 
 <img src="./images/activities.png">
 
-#### Adding Activities
+### Adding Activities
 
 <img src="./images/activity_add.png" width="800">
 
-#### Updating Activities
+### Updating Activities
 
 <img src="./images/activity_update.png" width="800">
 
-#### Deleting Activities
+### Deleting Activities
 
 <img src="./images/activity_delete.png" width="300">
 
-### Events
+## Events
 
 <img src="./images/events.png">
 
-#### Adding Events
+### Adding Events
 
 <img src="./images/event_add.png" width="800">
 
-#### Updating Events
+### Updating Events
 
 <img src="./images/event_update.png" width="800">
 
-#### Deleting Events
+### Deleting Events
 
 <img src="./images/event_delete.png" width="300">
 
-### Coaches
+## Coaches
 
 <img src="./images/coaches.png">
 
-#### Updating Coaches
+### Updating Coaches
 
 <img src="./images/coach_update.png" width="800">
 
-### Gallery
+## Gallery
 
 <img src="./images/gallery.png">
 
-#### Uploading Images
+### Uploading Images
 
 <img src="./images/gallery_image_upload.png" width="800">
 
-#### Deleting Images
+### Deleting Images
 
 <img src="./images/image_delete.png" width="300">
 
-### Offer
+## Offer
 
 <img src="./images/offer.png">
 
-#### Adding Offer
+### Adding Offer
 
 <img src="./images/offer_add.png" width="800">
 
-#### Updating Offer
+### Updating Offer
 
 <img src="./images/offer_update.png" width="800">
 
-#### Deleting Offer
+### Deleting Offer
 
-###### offer delete
+<img src="./images/offer_delete.png" width="300">
 
-### Contact
-
-<img src="./images/contact_first_login.png" width="800">
-
-#### Adding School Data
-
-###### add school data 2
+## Contact
 
 <img src="./images/contact.png">
 
-#### Updating Address
+### First Login
+
+<img src="./images/contact_first_login.png" width="800">
+
+### Adding Address Data
+
+<img src="./images/contact_add_address_data.png" width="800">
+
+### Updating Address
 
 <img src="./images/contact_update_address.png" width="800">
 
-#### Updating Contact People
+### Updating Contact People
 
 <img src="./images/contact_update_people.png" width="800">
 
-### Upcoming Classes
+## Upcoming Classes
 
 <img src="./images/upcoming_classes.png">
 
-### Assignments
+## Assignments
 
 <img src="./images/assignments.png">
 
-#### Requesting/Adding Assignments
+### Requesting/Adding Assignments
 
 <img src="./images/assignment_request.png" width="800">
 
+____________________________________________________
+
 <img src="./images/assignment_add.png" width="800">
 
-#### Updating Assignments
+### Updating Assignments
 
-###### update 'Song Name'
+<img src="./images/assignment_update.png">
 
-<img src="./images/assignment_individual_update.png">
-
-<img src="./images/assignment_group_update.png" width="800">
-
-### Messages
+## Messages
 
 <img src="./images/messages.png" width="600">
 
-#### Sending Messages
+### Sending Messages
 
 <img src="./images/message_send.png" width="600">
 
-#### Searching Users
+### Searching Users
 
 <img src="./images/messages_search_user.png" width="300">
 
-### Calendar
+## Calendar
 
 <img src="./images/calendar.png">
 
-### Settings
+## Payments
+
+<img src="./images/payments.png">
+
+## Settings
 
 <img src="./images/settings.png" width="800">
 
-#### Updating Personal Email
+### Updating Personal Mail
 
-<img src="./images/email_update.png" width="300">
+<img src="./images/mail_update.png" width="300">
 
-#### Updating Password
+### Updating Password
 
 <img src="./images/password_update.png" width="300">
 
-### Classes
+## Classes
 
 <img src="./images/classes.png" width="800">
 
-#### First Login
+### First Login
 
 <img src="./images/classes_first_login.png" width="800">
 
-#### Adding Classes
+### Adding Classes
 
 <img src="./images/class_add.png" width="800">
 
-#### Updating Classes
+### Updating Classes
 
 <img src="./images/class_update.png" width="800">
 
-#### Deleting Classes
+### Deleting Classes
 
-###### classes delete
+<img src="./images/class_delete.png" width="300">
 
-### Users
+## Users
 
 <img src="./images/users.png" width="800">
 
-#### Adding Users
+### First Login
 
-###### coaches and students
+<img src="./images/users_first_login.png" width="800">
 
-<img src="./images/user_add.png" width="800">
+### Adding Users
 
-#### Updating Users
+#### Adding Coach
 
-<img src="./images/user_update.png" width="800">
+<img src="./images/user_add_coach.png" width="800">
 
-#### Deleting Users
+#### Adding Student
 
-###### users delete
+<img src="./images/user_add_student.png" width="800">
+
+### Updating Users
+
+#### Updating Coach
+
+<img src="./images/user_update_coach.png" width="800">
+
+#### Updating Student
+
+<img src="./images/user_update_student.png" width="800">
+
+### Deleting Users
+
+<img src="./images/user_delete.png" width="300">
